@@ -1,0 +1,12 @@
+*__pycache__
+*.ckpt
+Wan-AI
+*.mp4
+*.png
+wandb
+*.pth
+example_test_data/
+google-cloud-sdk/
+*.gz
+=*
+*.pickle
