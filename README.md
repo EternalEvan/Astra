@@ -2,7 +2,7 @@
 
 <div align="center">
 <div align="center" style="margin-top: 0px; margin-bottom: 0px;">
-<img src=https://github.com/user-attachments/assets/81ccf80e-f4b6-4a3d-b47a-e9c2ce14e34f width="30%"/>
+<img src="./assets/images/logo-text.png" width="30%"/>
 </div>
 
 ### [<a href="https://arxiv.org/abs/2503.11647" target="_blank">arXiv</a>] [<a href="https://jianhongbai.github.io/ReCamMaster/" target="_blank">Project Page</a>] [<a href="https://huggingface.co/datasets/KwaiVGI/MultiCamVideo-Dataset" target="_blank">Dataset</a>]
@@ -10,7 +10,7 @@ _**[Jianhong Bai<sup>1*</sup>](https://jianhongbai.github.io/), [Menghan Xia<sup
 <br>
 (*Work done during an internship at KwaiVGI, Kuaishou Technology †corresponding authors)
 
-<sup>1</sup>Zhejiang University, <sup>2</sup>Kuaishou Technology, <sup>3</sup>CUHK, <sup>4</sup>HUST.
+<sup>1</sup>Tsinghua University, <sup>2</sup>Kuaishou Technology.
 
 </div>
 
