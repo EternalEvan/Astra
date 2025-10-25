@@ -1,14 +1,14 @@
 # Astra<img src="./assets/images/logo.png" alt="logo" style="height: 1em; vertical-align: baseline; margin: 0 0.1em;">: General Interactive World Model with Autoregressive Denoising
 
 <div align="center">
-<div align="center" style="margin-top: 0px; margin-bottom: -25px;">
+<div align="center" style="margin-top: 0px; margin-bottom: -30px;">
 <img src="./assets/images/logo-text.png" width="30%"/>
 </div>
 
 ### [<a href="https://arxiv.org/abs/2503.11647" target="_blank">arXiv</a>] [<a href="https://eternalevan.github.io/Astra-project/" target="_blank">Project Page</a>]
 **[Yixuan Zhu<sup>1</sup>](https://jianhongbai.github.io/), [Jiaqi Feng<sup>1</sup>](https://menghanxia.github.io/), [Wenzhao Zheng<sup>1 †</sup>](https://fuxiao0719.github.io/), [Yuan Gao<sup>2</sup>](https://xinntao.github.io/), [Xin Tao<sup>2</sup>](https://scholar.google.com/citations?user=dCik-2YAAAAJ&hl=en), [Pengfei Wan<sup>2</sup>](https://openreview.net/profile?id=~Jinwen_Cao1), [Jie Zhou <sup>1</sup>](https://person.zju.edu.cn/en/lzz), [Jiwen Lu<sup>1</sup>](https://person.zju.edu.cn/en/huhaoji)**
 
-(*Work done during an internship at KwaiVGI, Kuaishou Technology 
+(*Work done during an internship at Kuaishou Technology, 
 † Project leader)
 
 <sup>1</sup>Tsinghua University, <sup>2</sup>Kuaishou Technology.
