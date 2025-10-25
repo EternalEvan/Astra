@@ -6,9 +6,10 @@
 </div>
 
 ### [<a href="https://arxiv.org/abs/2503.11647" target="_blank">arXiv</a>] [<a href="https://eternalevan.github.io/Astra-project/" target="_blank">Project Page</a>]
-_**[Yixuan Zhu<sup>1</sup>](https://jianhongbai.github.io/), [Jiaqi Feng<sup>1</sup>](https://menghanxia.github.io/), [Wenzhao Zheng<sup>1$\dagger$</sup>](https://fuxiao0719.github.io/), [Yuan Gao<sup>2</sup>](https://xinntao.github.io/), [Xin Tao<sup>1</sup>](https://scholar.google.com/citations?user=dCik-2YAAAAJ&hl=en), [Pengfei Wan<sup>2</sup>](https://openreview.net/profile?id=~Jinwen_Cao1), <br>[Jie Zhou <sup>1</sup>](https://person.zju.edu.cn/en/lzz), [Jiwen Lu<sup>1</sup>](https://person.zju.edu.cn/en/huhaoji)**_
-<br>
-(*Work done during an internship at KwaiVGI, Kuaishou Technology †corresponding authors)
+**[Yixuan Zhu<sup>1</sup>](https://jianhongbai.github.io/), [Jiaqi Feng<sup>1</sup>](https://menghanxia.github.io/), [Wenzhao Zheng<sup>1 $\ddagger$</sup>](https://fuxiao0719.github.io/), [Yuan Gao<sup>2</sup>](https://xinntao.github.io/), [Xin Tao<sup>2</sup>](https://scholar.google.com/citations?user=dCik-2YAAAAJ&hl=en), [Pengfei Wan<sup>2</sup>](https://openreview.net/profile?id=~Jinwen_Cao1), [Jie Zhou <sup>1</sup>](https://person.zju.edu.cn/en/lzz), [Jiwen Lu<sup>1</sup>](https://person.zju.edu.cn/en/huhaoji)**
+
+(*Work done during an internship at KwaiVGI, Kuaishou Technology 
+$\ddagger$ Project leader)
 
 <sup>1</sup>Tsinghua University, <sup>2</sup>Kuaishou Technology.
 
