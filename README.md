@@ -1,7 +1,7 @@
 # Astra<img src="./assets/images/logo.png" alt="logo" style="height: 1em; vertical-align: baseline; margin: 0 0.1em;">: General Interactive World Model with Autoregressive Denoising
 
 <div align="center">
-<div align="center" style="margin-top: 0px; margin-bottom: 0px;">
+<div align="center" style="margin-top: 0px; margin-bottom: -25px;">
 <img src="./assets/images/logo-text.png" width="30%"/>
 </div>
 
