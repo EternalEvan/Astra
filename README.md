@@ -44,7 +44,7 @@
 If you would like to use ReCamMaster as a baseline and need qualitative or quantitative comparisons, please feel free to drop an email to [jianhongbai@zju.edu.cn](mailto:jianhongbai@zju.edu.cn). We can assist you with batch inference of our model. -->
 
 ## ⚙️ Code: Astra + Wan2.1 (Inference & Training)
-The model utilized in our paper is an internally developed T2V model, not [Wan2.1](https://github.com/Wan-Video/Wan2.1). Due to company policy restrictions, we are unable to open-source the model used in the paper. Consequently, we migrated ReCamMaster to Wan2.1 to validate the effectiveness of our method. Due to differences in the underlying T2V model, you may not achieve the same results as demonstrated in the demo.
+The model utilized in our paper is an internally developed T2V model, not [Wan2.1](https://github.com/Wan-Video/Wan2.1). Due to company policy restrictions, we are unable to open-source the model used in the paper. Consequently, we migrated Asta to Wan2.1 to validate the effectiveness of our method. Due to differences in the underlying T2V model, you may not achieve the same results as demonstrated in the demo.
 ### Inference
 Step 1: Set up the environment
 
@@ -134,7 +134,7 @@ Step 4: Test the model
 python inference_recammaster.py --cam_type 1 --ckpt_path path/to/the/checkpoint
 ```
 
-## 📷 Dataset: MultiCamVideo Dataset
+<!-- ## 📷 Dataset: MultiCamVideo Dataset
 ### 1. Dataset Introduction
 
 **TL;DR:** The MultiCamVideo Dataset is a multi-camera synchronized video dataset rendered using Unreal Engine 5. It includes synchronized multi-camera videos and their corresponding camera trajectories. The MultiCamVideo Dataset can be valuable in fields such as camera-controlled video generation, synchronized video production, and 3D/4D reconstruction.
@@ -266,7 +266,7 @@ The visualization script is modified from [CameraCtrl](https://github.com/hehao1
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/f9cf342d-2fb3-40ef-a7be-edafb5775004" alt="Example Image" width="40%">
-</p>
+</p> -->
 
 ## 🤗 Awesome Related Works
 Feel free to explore these outstanding related works, including but not limited to:
