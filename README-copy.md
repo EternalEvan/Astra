@@ -1,30 +1,40 @@
-# Astra<img src="./assets/images/logo.png" alt="logo" style="height: 1em; vertical-align: baseline; margin: 0 0.1em;">: General Interactive World Model with Autoregressive Denoising
+# ReCamMaster: Camera-Controlled Generative Rendering from A Single Video (ICCV'25 Oral, Best Paper Finalist)
 
 <div align="center">
-<div align="center" style="margin-top: 0px; margin-bottom: -30px;">
-<img src="./assets/images/logo-text.png" width="30%"/>
+<div align="center" style="margin-top: 0px; margin-bottom: 0px;">
+<img src=https://github.com/user-attachments/assets/81ccf80e-f4b6-4a3d-b47a-e9c2ce14e34f width="30%"/>
 </div>
 
-### [<a href="https://arxiv.org/abs/2503.11647" target="_blank">arXiv</a>] [<a href="https://eternalevan.github.io/Astra-project/" target="_blank">Project Page</a>]
-**[Yixuan Zhu<sup>1</sup>](https://jianhongbai.github.io/), [Jiaqi Feng<sup>1</sup>](https://menghanxia.github.io/), [Wenzhao Zheng<sup>1 †</sup>](https://fuxiao0719.github.io/), [Yuan Gao<sup>2</sup>](https://xinntao.github.io/), [Xin Tao<sup>2</sup>](https://scholar.google.com/citations?user=dCik-2YAAAAJ&hl=en), [Pengfei Wan<sup>2</sup>](https://openreview.net/profile?id=~Jinwen_Cao1), [Jie Zhou <sup>1</sup>](https://person.zju.edu.cn/en/lzz), [Jiwen Lu<sup>1</sup>](https://person.zju.edu.cn/en/huhaoji)**
-<!-- <br> -->
-(*Work done during an internship at Kuaishou Technology, 
-† Project leader)
+### [<a href="https://arxiv.org/abs/2503.11647" target="_blank">arXiv</a>] [<a href="https://jianhongbai.github.io/ReCamMaster/" target="_blank">Project Page</a>] [<a href="https://huggingface.co/datasets/KwaiVGI/MultiCamVideo-Dataset" target="_blank">Dataset</a>]
+_**[Jianhong Bai<sup>1*</sup>](https://jianhongbai.github.io/), [Menghan Xia<sup>2†</sup>](https://menghanxia.github.io/), [Xiao Fu<sup>3</sup>](https://fuxiao0719.github.io/), [Xintao Wang<sup>2</sup>](https://xinntao.github.io/), [Lianrui Mu<sup>1</sup>](https://scholar.google.com/citations?user=dCik-2YAAAAJ&hl=en), [Jinwen Cao<sup>2</sup>](https://openreview.net/profile?id=~Jinwen_Cao1), <br>[Zuozhu Liu<sup>1</sup>](https://person.zju.edu.cn/en/lzz), [Haoji Hu<sup>1†</sup>](https://person.zju.edu.cn/en/huhaoji), [Xiang Bai<sup>4</sup>](https://scholar.google.com/citations?user=UeltiQ4AAAAJ&hl=en), [Pengfei Wan<sup>2</sup>](https://scholar.google.com/citations?user=P6MraaYAAAAJ&hl=en), [Di Zhang<sup>2</sup>](https://openreview.net/profile?id=~Di_ZHANG3)**_
+<br>
+(*Work done during an internship at KwaiVGI, Kuaishou Technology †corresponding authors)
 
-<sup>1</sup>Tsinghua University, <sup>2</sup>Kuaishou Technology. 
+<sup>1</sup>Zhejiang University, <sup>2</sup>Kuaishou Technology, <sup>3</sup>CUHK, <sup>4</sup>HUST.
+
 </div>
+
+**Important Note:** This open-source repository is intended to provide a reference implementation. Due to the difference in the underlying T2V model's performance, the open-source version may not achieve the same performance as the model in our paper. If you'd like to use the best version of ReCamMaster, please upload your video to [this link](https://docs.google.com/forms/d/e/1FAIpQLSezOzGPbm8JMXQDq6EINiDf6iXn7rV4ozj6KcbQCSAzE8Vsnw/viewform?usp=dialog). Additionally, we are working on developing an online trial website. Please stay tuned to updates on the [Kling website](https://app.klingai.com/global/).
 
 ## 🔥 Updates
-- __[2024.11.17]__: Release the [project page](https://eternalevan.github.io/Astra-project/).
-- __[2024.12.09]__: Release the training and inference code, model checkpoint.
+- __[2025.04.15]__: Please feel free to explore our related work, [SynCamMaster](https://github.com/KwaiVGI/SynCamMaster).
+- __[2025.04.09]__: Release the [training and inference code](https://github.com/KwaiVGI/ReCamMaster?tab=readme-ov-file#%EF%B8%8F-code-recammaster--wan21-inference--training), [model checkpoint](https://huggingface.co/KwaiVGI/ReCamMaster-Wan2.1/blob/main/step20000.ckpt).
+- __[2025.03.31]__: Release the [MultiCamVideo Dataset](https://huggingface.co/datasets/KwaiVGI/MultiCamVideo-Dataset).
+- __[2025.03.31]__: We have sent the inference results to the first 1000 trial users.
+- __[2025.03.17]__: Release the [project page](https://jianhongbai.github.io/ReCamMaster/) and the [try out link](https://docs.google.com/forms/d/e/1FAIpQLSezOzGPbm8JMXQDq6EINiDf6iXn7rV4ozj6KcbQCSAzE8Vsnw/viewform?usp=dialog).
+
+
+
   
 ## 📖 Introduction
 
-**TL;DR:** Astra is an interactive world model capable of understanding and generating realistic visual outcomes across diverse scenarios and action inputs.
+**TL;DR:** We propose ReCamMaster to re-capture in-the-wild videos with novel camera trajectories, achieved through our proposed simple-and-effective video conditioning scheme. We also release a multi-camera synchronized video [dataset](https://huggingface.co/datasets/KwaiVGI/MultiCamVideo-Dataset) rendered with Unreal Engine 5. <br>
 
-<!-- ## 🚀 Trail: Try ReCamMaster with Your Own Videos
+https://github.com/user-attachments/assets/52455e86-1adb-458d-bc37-4540a65a60d4
 
-**Update:** We are actively processing the videos uploaded by users. So far, we have sent the inference results to the email addresses of the first **1180** testers. You should receive an email titled "Inference Results of ReCamMaster" from either jianhongbai@zju.edu.cn or cpurgicn@gmail.com. Please also check your spam folder, and let us know if you haven't received the email after a long time. If you enjoyed the videos we created, please consider giving us a star 🌟.
+## 🚀 Trail: Try ReCamMaster with Your Own Videos
+
+**Update:** We are actively processing the videos uploaded by users. So far, we have sent the inference results to the email addresses of the first **1500** testers. You should receive an email titled "Inference Results of ReCamMaster" from either jianhongbai@zju.edu.cn or cpurgicn@gmail.com. Please also check your spam folder, and let us know if you haven't received the email after a long time. If you enjoyed the videos we created, please consider giving us a star 🌟.
 
 **You can try out our ReCamMaster by uploading your own video to [this link](https://docs.google.com/forms/d/e/1FAIpQLSezOzGPbm8JMXQDq6EINiDf6iXn7rV4ozj6KcbQCSAzE8Vsnw/viewform?usp=dialog), which will generate a video with camera movements along a new trajectory.** We will send the mp4 file generated by ReCamMaster to your inbox as soon as possible. For camera movement trajectories, we offer 10 basic camera trajectories as follows:
 
@@ -41,9 +51,9 @@
 | 9 | Arc Left (with rotation)    |
 | 10 | Arc Right (with rotation)   |
 
-If you would like to use ReCamMaster as a baseline and need qualitative or quantitative comparisons, please feel free to drop an email to [jianhongbai@zju.edu.cn](mailto:jianhongbai@zju.edu.cn). We can assist you with batch inference of our model. -->
+If you would like to use ReCamMaster as a baseline and need qualitative or quantitative comparisons, please feel free to drop an email to [jianhongbai@zju.edu.cn](mailto:jianhongbai@zju.edu.cn). We can assist you with batch inference of our model.
 
-## ⚙️ Code: Astra + Wan2.1 (Inference & Training)
+## ⚙️ Code: ReCamMaster + Wan2.1 (Inference & Training)
 The model utilized in our paper is an internally developed T2V model, not [Wan2.1](https://github.com/Wan-Video/Wan2.1). Due to company policy restrictions, we are unable to open-source the model used in the paper. Consequently, we migrated ReCamMaster to Wan2.1 to validate the effectiveness of our method. Due to differences in the underlying T2V model, you may not achieve the same results as demonstrated in the demo.
 ### Inference
 Step 1: Set up the environment
@@ -56,8 +66,8 @@ curl --proto '=https' --tlsv1.2 -sSf [https://sh.rustup.rs](https://sh.rustup.rs
 
 Install [DiffSynth-Studio](https://github.com/modelscope/DiffSynth-Studio):
 ```shell
-git clone https://github.com/EternalEvan/Astra.git
-cd Astra
+git clone https://github.com/KwaiVGI/ReCamMaster.git
+cd ReCamMaster
 pip install -e .
 ```
 
@@ -65,16 +75,16 @@ Step 2: Download the pretrained checkpoints
 1. Download the pre-trained Wan2.1 models
 
 ```shell
-cd script
+cd ReCamMaster
 python download_wan2.1.py
 ```
-2. Download the pre-trained Astra checkpoint
+2. Download the pre-trained ReCamMaster checkpoint
 
-Please download from [huggingface](https://huggingface.co/KwaiVGI/ReCamMaster-Wan2.1/blob/main/step20000.ckpt) and place it in ```models/Astra/checkpoints```.
+Please download from [huggingface](https://huggingface.co/KwaiVGI/ReCamMaster-Wan2.1/blob/main/step20000.ckpt) and place it in ```models/ReCamMaster/checkpoints```.
 
 Step 3: Test the example videos
 ```shell
-python inference_astra.py --cam_type 1
+python inference_recammaster.py --cam_type 1
 ```
 
 Step 4: Test your own videos
@@ -82,7 +92,7 @@ Step 4: Test your own videos
 If you want to test your own videos, you need to prepare your test data following the structure of the ```example_test_data``` folder. This includes N mp4 videos, each with at least 81 frames, and a ```metadata.csv``` file that stores their paths and corresponding captions. You can refer to the [Prompt Extension section](https://github.com/Wan-Video/Wan2.1?tab=readme-ov-file#2-using-prompt-extension) in Wan2.1 for guidance on preparing video captions. 
 
 ```shell
-python inference_astra.py --cam_type 1 --dataset_path path/to/your/data
+python inference_recammaster.py --cam_type 1 --dataset_path path/to/your/data
 ```
 
 We provide several preset camera types, as shown in the table below. Additionally, you can generate new trajectories for testing.
@@ -137,7 +147,7 @@ python inference_recammaster.py --cam_type 1 --ckpt_path path/to/the/checkpoint
 ## 📷 Dataset: MultiCamVideo Dataset
 ### 1. Dataset Introduction
 
-**TL;DR:** The MultiCamVideo Dataset is a multi-camera synchronized video dataset rendered using Unreal Engine 5. It includes synchronized multi-camera videos and their corresponding camera trajectories. The MultiCamVideo Dataset can be valuable in fields such as camera-controlled video generation, synchronized video production, and 3D/4D reconstruction.
+**TL;DR:** The MultiCamVideo Dataset is a multi-camera synchronized video dataset rendered using Unreal Engine 5. It includes synchronized multi-camera videos and their corresponding camera trajectories. The MultiCamVideo Dataset can be valuable in fields such as camera-controlled video generation, synchronized video production, and 3D/4D reconstruction. If you are looking for synchronized videos captured with stationary cameras, please explore our [SynCamVideo Dataset](https://github.com/KwaiVGI/SynCamMaster).
 
 https://github.com/user-attachments/assets/6fa25bcf-1136-43be-8110-b527638874d4
 
@@ -289,13 +299,10 @@ Feel free to explore these outstanding related works, including but not limited 
 
 Please leave us a star 🌟 and cite our paper if you find our work helpful.
 ```
-@misc{bai2025recammaster,
-      title={ReCamMaster: Camera-Controlled Generative Rendering from A Single Video}, 
-      author={Jianhong Bai and Menghan Xia and Xiao Fu and Xintao Wang and Lianrui Mu and Jinwen Cao and Zuozhu Liu and Haoji Hu and Xiang Bai and Pengfei Wan and Di Zhang},
-      year={2025},
-      eprint={2503.11647},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2503.11647}, 
+@article{bai2025recammaster,
+  title={ReCamMaster: Camera-Controlled Generative Rendering from A Single Video},
+  author={Bai, Jianhong and Xia, Menghan and Fu, Xiao and Wang, Xintao and Mu, Lianrui and Cao, Jinwen and Liu, Zuozhu and Hu, Haoji and Bai, Xiang and Wan, Pengfei and others},
+  journal={arXiv preprint arXiv:2503.11647},
+  year={2025}
 }
 ```
