@@ -15,7 +15,7 @@
 
 ## 🔥 Updates
 - __[2024.11.17]__: Release the [project page](https://eternalevan.github.io/Astra-project/).
-- __[2024.12.09]__: Release the [training and inference code](https://github.com/KwaiVGI/ReCamMaster/edit/main/README.md#%EF%B8%8F-code-recammaster--wan21-inference--training), [model checkpoint](https://huggingface.co/KwaiVGI/ReCamMaster-Wan2.1/blob/main/step20000.ckpt).
+- __[2024.12.09]__: Release the training and inference code, model checkpoint.
   
 ## 📖 Introduction
 
@@ -42,7 +42,7 @@
 
 If you would like to use ReCamMaster as a baseline and need qualitative or quantitative comparisons, please feel free to drop an email to [jianhongbai@zju.edu.cn](mailto:jianhongbai@zju.edu.cn). We can assist you with batch inference of our model. -->
 
-## ⚙️ Code: ReCamMaster + Wan2.1 (Inference & Training)
+## ⚙️ Code: Astra + Wan2.1 (Inference & Training)
 The model utilized in our paper is an internally developed T2V model, not [Wan2.1](https://github.com/Wan-Video/Wan2.1). Due to company policy restrictions, we are unable to open-source the model used in the paper. Consequently, we migrated ReCamMaster to Wan2.1 to validate the effectiveness of our method. Due to differences in the underlying T2V model, you may not achieve the same results as demonstrated in the demo.
 ### Inference
 Step 1: Set up the environment
