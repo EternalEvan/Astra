@@ -13,23 +13,15 @@
 
 <sup>1</sup>Tsinghua University, <sup>2</sup>Kuaishou Technology.
 
-</div>
-
-**Important Note:** This open-source repository is intended to provide a reference implementation. Due to the difference in the underlying T2V model's performance, the open-source version may not achieve the same performance as the model in our paper. If you'd like to use the best version of ReCamMaster, please upload your video to [this link](https://docs.google.com/forms/d/e/1FAIpQLSezOzGPbm8JMXQDq6EINiDf6iXn7rV4ozj6KcbQCSAzE8Vsnw/viewform?usp=dialog). Additionally, we are working on developing an online trial website. Please stay tuned to updates on the [Kling website](https://app.klingai.com/global/).
-
 ## 🔥 Updates
-- __[2024.03.17]__: Release the [project page](https://eternalevan.github.io/Astra-project/) and the [try out link](https://docs.google.com/forms/d/e/1FAIpQLSezOzGPbm8JMXQDq6EINiDf6iXn7rV4ozj6KcbQCSAzE8Vsnw/viewform?usp=dialog).
-- __[2024.03.31]__: Release the [MultiCamVideo Dataset](https://huggingface.co/datasets/KwaiVGI/MultiCamVideo-Dataset).
-- __[2024.03.31]__: We have sent the inference results to the first 1000 trial users.
-- __[2024.04.09]__: Release the [training and inference code](https://github.com/KwaiVGI/ReCamMaster/edit/main/README.md#%EF%B8%8F-code-recammaster--wan21-inference--training), [model checkpoint](https://huggingface.co/KwaiVGI/ReCamMaster-Wan2.1/blob/main/step20000.ckpt).
+- __[2024.11.17]__: Release the [project page](https://eternalevan.github.io/Astra-project/).
+- __[2024.12.09]__: Release the [training and inference code](https://github.com/KwaiVGI/ReCamMaster/edit/main/README.md#%EF%B8%8F-code-recammaster--wan21-inference--training), [model checkpoint](https://huggingface.co/KwaiVGI/ReCamMaster-Wan2.1/blob/main/step20000.ckpt).
   
 ## 📖 Introduction
 
-**TL;DR:** We propose ReCamMaster to re-capture in-the-wild videos with novel camera trajectories. We also release a multi-camera synchronized video [dataset](https://huggingface.co/datasets/KwaiVGI/MultiCamVideo-Dataset) rendered with Unreal Engine 5. <br>
+**TL;DR:** Astra is an interactive world model capable of understanding and generating realistic visual outcomes across diverse scenarios and action inputs.
 
-https://github.com/user-attachments/assets/52455e86-1adb-458d-bc37-4540a65a60d4
-
-## 🚀 Trail: Try ReCamMaster with Your Own Videos
+<!-- ## 🚀 Trail: Try ReCamMaster with Your Own Videos
 
 **Update:** We are actively processing the videos uploaded by users. So far, we have sent the inference results to the email addresses of the first **1180** testers. You should receive an email titled "Inference Results of ReCamMaster" from either jianhongbai@zju.edu.cn or cpurgicn@gmail.com. Please also check your spam folder, and let us know if you haven't received the email after a long time. If you enjoyed the videos we created, please consider giving us a star 🌟.
 
@@ -48,7 +40,7 @@ https://github.com/user-attachments/assets/52455e86-1adb-458d-bc37-4540a65a60d4
 | 9 | Arc Left (with rotation)    |
 | 10 | Arc Right (with rotation)   |
 
-If you would like to use ReCamMaster as a baseline and need qualitative or quantitative comparisons, please feel free to drop an email to [jianhongbai@zju.edu.cn](mailto:jianhongbai@zju.edu.cn). We can assist you with batch inference of our model.
+If you would like to use ReCamMaster as a baseline and need qualitative or quantitative comparisons, please feel free to drop an email to [jianhongbai@zju.edu.cn](mailto:jianhongbai@zju.edu.cn). We can assist you with batch inference of our model. -->
 
 ## ⚙️ Code: ReCamMaster + Wan2.1 (Inference & Training)
 The model utilized in our paper is an internally developed T2V model, not [Wan2.1](https://github.com/Wan-Video/Wan2.1). Due to company policy restrictions, we are unable to open-source the model used in the paper. Consequently, we migrated ReCamMaster to Wan2.1 to validate the effectiveness of our method. Due to differences in the underlying T2V model, you may not achieve the same results as demonstrated in the demo.
@@ -63,8 +55,8 @@ curl --proto '=https' --tlsv1.2 -sSf [https://sh.rustup.rs](https://sh.rustup.rs
 
 Install [DiffSynth-Studio](https://github.com/modelscope/DiffSynth-Studio):
 ```shell
-git clone https://github.com/KwaiVGI/ReCamMaster.git
-cd ReCamMaster
+git clone https://github.com/EternalEvan/Astra.git
+cd Astra
 pip install -e .
 ```
 
@@ -72,16 +64,16 @@ Step 2: Download the pretrained checkpoints
 1. Download the pre-trained Wan2.1 models
 
 ```shell
-cd ReCamMaster
+cd script
 python download_wan2.1.py
 ```
-2. Download the pre-trained ReCamMaster checkpoint
+2. Download the pre-trained Astra checkpoint
 
-Please download from [huggingface](https://huggingface.co/KwaiVGI/ReCamMaster-Wan2.1/blob/main/step20000.ckpt) and place it in ```models/ReCamMaster/checkpoints```.
+Please download from [huggingface](https://huggingface.co/KwaiVGI/ReCamMaster-Wan2.1/blob/main/step20000.ckpt) and place it in ```models/Astra/checkpoints```.
 
 Step 3: Test the example videos
 ```shell
-python inference_recammaster.py --cam_type 1
+python inference_astra.py --cam_type 1
 ```
 
 Step 4: Test your own videos
@@ -89,7 +81,7 @@ Step 4: Test your own videos
 If you want to test your own videos, you need to prepare your test data following the structure of the ```example_test_data``` folder. This includes N mp4 videos, each with at least 81 frames, and a ```metadata.csv``` file that stores their paths and corresponding captions. You can refer to the [Prompt Extension section](https://github.com/Wan-Video/Wan2.1?tab=readme-ov-file#2-using-prompt-extension) in Wan2.1 for guidance on preparing video captions. 
 
 ```shell
-python inference_recammaster.py --cam_type 1 --dataset_path path/to/your/data
+python inference_astra.py --cam_type 1 --dataset_path path/to/your/data
 ```
 
 We provide several preset camera types, as shown in the table below. Additionally, you can generate new trajectories for testing.
