@@ -271,6 +271,8 @@ The visualization script is modified from [CameraCtrl](https://github.com/hehao1
 ## 🤗 Awesome Related Works
 Feel free to explore these outstanding related works, including but not limited to:
 
+[ReCamMaster](https://github.com/KlingTeam/ReCamMaster): ReCamMaster re-captures in-the-wild videos with novel camera trajectories. 
+
 [GCD](https://gcd.cs.columbia.edu/): GCD synthesizes large-angle novel viewpoints of 4D dynamic scenes from a monocular video.
 
 [ReCapture](https://generative-video-camera-controls.github.io/): a method for generating new videos with novel camera trajectories from a single user-provided video.
@@ -290,8 +292,8 @@ Feel free to explore these outstanding related works, including but not limited 
 Please leave us a star 🌟 and cite our paper if you find our work helpful.
 ```
 @misc{bai2025recammaster,
-      title={ReCamMaster: Camera-Controlled Generative Rendering from A Single Video}, 
-      author={Jianhong Bai and Menghan Xia and Xiao Fu and Xintao Wang and Lianrui Mu and Jinwen Cao and Zuozhu Liu and Haoji Hu and Xiang Bai and Pengfei Wan and Di Zhang},
+      title={Astra: General Interactive World Model with Autoregressive Denoising}, 
+      author={Yixuan Zhu, Feng Jiaqi, Wenzhao Zheng, Yuan Gao, Xin Tao, Pengfei Wan, Jiwen Lu, Jie Zhou},
       year={2025},
       eprint={2503.11647},
       archivePrefix={arXiv},
