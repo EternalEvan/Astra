@@ -948,7 +948,17 @@ class WanModelMoe(torch.nn.Module):
             context = self.text_embedding(context)
         t = self.time_embedding(
             sinusoidal_embedding_1d(self.freq_dim, timestep))
-        t_mod = self.time_projection(t).unflatten(1, (6, self.dim))
+        #t_mod = self.time_projection(t).unflatten(1, (6, self.dim))
+        with torch.amp.autocast("cuda", enabled=False):
+            # Force time projection (and parameters) to run in fp32 to bypass bf16 autocast
+            t_fp32 = t.float()
+            t_activated = self.time_projection[0](t_fp32)
+            linear = self.time_projection[1]
+            weight_fp32 = linear.weight.float()
+            bias_fp32 = linear.bias.float() if linear.bias is not None else None
+            t_proj = F.linear(t_activated, weight_fp32, bias_fp32)
+            t_proj = t_proj.to(t.dtype)
+        t_mod = t_proj.unflatten(1, (6, self.dim))
 
         # 确保rope_freqs与hidden_states的序列长度匹配
         assert rope_freqs.shape[1] == hidden_states.shape[1], \
