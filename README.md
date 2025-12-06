@@ -38,12 +38,12 @@
           <video src="https://github.com/user-attachments/assets/c7156c4d-d51d-493c-995e-5113c3d49abb" width="100%" controls autoplay loop></video>
      </td>
       <td>
-          <video src="https://github.com/user-attachments/assets/773515e6-0360-49dd-a448-e82ece06efe8" width="100%" controls autoplay loop></video>
+          <video src="https://github.com/user-attachments/assets/715a5b66-3966-4923-aa00-02315fb07761" width="100%" controls autoplay loop></video>
      </td>
   </tr>
   <tr>
       <td>
-          <video src="https://github.com/user-attachments/assets/122d48c4-318c-43ab-b292-4abc30fd868a" width="100%" controls autoplay loop></video>
+          <video src="https://github.com/user-attachments/assets/d899d704-c706-4e64-a24b-eea174d2173d" width="100%" controls autoplay loop></video>
       </td>
       <td>
           <video src="https://github.com/user-attachments/assets/c1d8beb2-3102-468a-8019-624d89fba125" width="100%" controls autoplay loop></video>
