@@ -15,8 +15,8 @@
 </div>
 
 ## 🔥 Updates
-- __[2024.11.17]__: Release the [project page](https://eternalevan.github.io/Astra-project/).
-- __[2024.12.09]__: Release the training and inference code, model checkpoint.
+- __[2025.11.17]__: Release the [project page](https://eternalevan.github.io/Astra-project/).
+- __[2025.12.09]__: Release the training and inference code, model checkpoint.
   
 ## 📖 Introduction
 
@@ -29,30 +29,47 @@
 <table border="0" style="width: 100%; text-align: left; margin-top: 20px;">
   <tr>
       <td>
-          <video src="https://github.com/user-attachments/assets/715a5b66-3966-4923-aa00-02315fb07761" width="100%" controls autoplay loop></video>
+          <video src="https://github.com/user-attachments/assets/715a5b66-3966-4923-aa00-02315fb07761"
+                 style="width:100%; height:180px; object-fit:cover;" 
+                 controls autoplay loop muted></video>
       </td>
       <td>
-          <video src="https://github.com/user-attachments/assets/1451947e-1851-4b57-a666-a44ffea7b10c" width="100%" controls autoplay loop></video>
+          <video src="https://github.com/user-attachments/assets/1451947e-1851-4b57-a666-a44ffea7b10c"
+                 style="width:100%; height:180px; object-fit:cover;" 
+                 controls autoplay loop muted></video>
       </td>
-       <td>
-          <video src="https://github.com/user-attachments/assets/c7156c4d-d51d-493c-995e-5113c3d49abb" width="100%" controls autoplay loop></video>
+      <td>
+          <video src="https://github.com/user-attachments/assets/c7156c4d-d51d-493c-995e-5113c3d49abb"
+                 style="width:100%; height:180px; object-fit:cover;" 
+                 controls autoplay loop muted></video>
      </td>
       <td>
-          <video src="https://github.com/user-attachments/assets/f7550916-e224-497a-b0b9-84479607c962" width="100%" controls autoplay loop></video>
+          <video src="https://github.com/user-attachments/assets/f7550916-e224-497a-b0b9-84479607c962"
+                 style="width:100%; height:180px; object-fit:cover;" 
+                 controls autoplay loop muted></video>
      </td>
   </tr>
+
   <tr>
       <td>
-          <video src="https://github.com/user-attachments/assets/d899d704-c706-4e64-a24b-eea174d2173d" width="100%" controls autoplay loop></video>
+          <video src="https://github.com/user-attachments/assets/d899d704-c706-4e64-a24b-eea174d2173d"
+                 style="width:100%; height:180px; object-fit:cover;" 
+                 controls autoplay loop muted></video>
       </td>
       <td>
-          <video src="https://github.com/user-attachments/assets/c1d8beb2-3102-468a-8019-624d89fba125" width="100%" controls autoplay loop></video>
+          <video src="https://github.com/user-attachments/assets/c1d8beb2-3102-468a-8019-624d89fba125"
+                 style="width:100%; height:180px; object-fit:cover;" 
+                 controls autoplay loop muted></video>
       </td>
-       <td>
-          <video src="https://github.com/user-attachments/assets/2aabc10b-f945-4d9d-b24a-baed17fcfe14" width="100%" controls autoplay loop></video>
+      <td>
+          <video src="https://github.com/user-attachments/assets/2aabc10b-f945-4d9d-b24a-baed17fcfe14"
+                 style="width:100%; height:180px; object-fit:cover;" 
+                 controls autoplay loop muted></video>
      </td>
       <td>
-          <video src="https://github.com/user-attachments/assets/5c03e6ae-0fc2-4e09-a5b5-f37d04e7bbf8" width="100%" controls autoplay loop></video>
+          <video src="https://github.com/user-attachments/assets/5c03e6ae-0fc2-4e09-a5b5-f37d04e7bbf8"
+                 style="width:100%; height:180px; object-fit:cover;" 
+                 controls autoplay loop muted></video>
      </td>
   </tr>
 </table>
