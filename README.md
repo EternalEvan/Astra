@@ -20,11 +20,11 @@
   
 ## 📖 Introduction
 
-**TL;DR:** Astra is an interactive world model capable of understanding and generating realistic visual outcomes across diverse scenarios and action inputs.
+**TL;DR:** Astra is an interactive world model that delivers realistic long-horizon video rollouts under a wide range of scenarios and action inputs.
 
 ## Gallery
 
-### Astra
+### Astra+Wan2.1
 
 <table border="0" style="width: 100%; text-align: left; margin-top: 20px;">
   <tr>
@@ -105,7 +105,7 @@ python download_wan2.1.py
 ```
 2. Download the pre-trained Astra checkpoint
 
-Please download from [huggingface](https://huggingface.co/KwaiVGI/ReCamMaster-Wan2.1/blob/main/step20000.ckpt) and place it in ```models/Astra/checkpoints```.
+Please download from [huggingface](https://huggingface.co/wjque/lyra/blob/main/diffusion_pytorch_model.ckpt) and place it in ```models/Astra/checkpoints```.
 
 Step 3: Test the example videos
 ```shell
@@ -326,13 +326,10 @@ Feel free to explore these outstanding related works, including but not limited 
 
 Please leave us a star 🌟 and cite our paper if you find our work helpful.
 ```
-@misc{bai2025recammaster,
-      title={Astra: General Interactive World Model with Autoregressive Denoising}, 
-      author={Yixuan Zhu, Feng Jiaqi, Wenzhao Zheng, Yuan Gao, Xin Tao, Pengfei Wan, Jiwen Lu, Jie Zhou},
-      year={2025},
-      eprint={2503.11647},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2503.11647}, 
+@inproceedings{zhu2025astra,
+  title={Astra: General Interactive World Model with Autoregressive Denoising},
+  author={Zhu, Yixuan and Feng, Jiaqi and Zheng, Wenzhao and Gao, Yuan and Tao, Xin and Wan, Pengfei and Zhou, Jie and Lu, Jiwen},
+  booktitle={arxiv},
+  year={2025}
 }
 ```
