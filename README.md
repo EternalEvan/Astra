@@ -22,6 +22,41 @@
 
 **TL;DR:** Astra is an interactive world model capable of understanding and generating realistic visual outcomes across diverse scenarios and action inputs.
 
+## Gallery
+
+### Astra
+
+<table border="0" style="width: 100%; text-align: left; margin-top: 20px;">
+  <tr>
+      <td>
+          <video src="https://github.com/user-attachments/assets/f7550916-e224-497a-b0b9-84479607c962" width="100%" controls autoplay loop></video>
+      </td>
+      <td>
+          <video src="https://github.com/user-attachments/assets/1451947e-1851-4b57-a666-a44ffea7b10c" width="100%" controls autoplay loop></video>
+      </td>
+       <td>
+          <video src="https://github.com/user-attachments/assets/c7156c4d-d51d-493c-995e-5113c3d49abb" width="100%" controls autoplay loop></video>
+     </td>
+      <td>
+          <video src="https://github.com/user-attachments/assets/773515e6-0360-49dd-a448-e82ece06efe8" width="100%" controls autoplay loop></video>
+     </td>
+  </tr>
+  <tr>
+      <td>
+          <video src="https://github.com/user-attachments/assets/122d48c4-318c-43ab-b292-4abc30fd868a" width="100%" controls autoplay loop></video>
+      </td>
+      <td>
+          <video src="https://github.com/user-attachments/assets/c1d8beb2-3102-468a-8019-624d89fba125" width="100%" controls autoplay loop></video>
+      </td>
+       <td>
+          <video src="https://github.com/user-attachments/assets/2aabc10b-f945-4d9d-b24a-baed17fcfe14" width="100%" controls autoplay loop></video>
+     </td>
+      <td>
+          <video src="https://github.com/user-attachments/assets/5c03e6ae-0fc2-4e09-a5b5-f37d04e7bbf8" width="100%" controls autoplay loop></video>
+     </td>
+  </tr>
+</table>
+
 <!-- ## 🚀 Trail: Try ReCamMaster with Your Own Videos
 
 **Update:** We are actively processing the videos uploaded by users. So far, we have sent the inference results to the email addresses of the first **1180** testers. You should receive an email titled "Inference Results of ReCamMaster" from either jianhongbai@zju.edu.cn or cpurgicn@gmail.com. Please also check your spam folder, and let us know if you haven't received the email after a long time. If you enjoyed the videos we created, please consider giving us a star 🌟.
