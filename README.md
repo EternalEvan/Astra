@@ -17,10 +17,25 @@
 ## 🔥 Updates
 - __[2025.11.17]__: Release the [project page](https://eternalevan.github.io/Astra-project/).
 - __[2025.12.09]__: Release the training and inference code, model checkpoint.
-  
+
+## 🎯 TODO List
+
+- [ ] **Release full inference pipelines** for additional scenarios:
+  - [ ] 🚗 Autonomous driving
+  - [ ] 🤖 Robotic manipulation
+  - [ ] 🛸 Drone navigation / exploration
+
+
+- [ ] **Open-source training scripts**:
+  - [ ] ⬆️ Action-conditioned autoregressive denoising training
+  - [ ] 🔄 Multi-scenario joint training pipeline
+
+- [ ] **Release dataset preprocessing tools**
+
+- [ ] **Provide unified evaluation toolkit**
 ## 📖 Introduction
 
-**TL;DR:** Astra is an interactive world model that delivers realistic long-horizon video rollouts under a wide range of scenarios and action inputs.
+**TL;DR:** Astra is an **interactive world model** that delivers realistic long-horizon video rollouts under a wide range of scenarios and action inputs.
 
 ## Gallery
 
