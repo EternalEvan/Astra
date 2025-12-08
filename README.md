@@ -2,7 +2,7 @@
 
 <div align="center">
 <div align="center" style="margin-top: 0px; margin-bottom: -30px;">
-<img src="./assets/images/logo-2.png" width="30%"/>
+<img src="./assets/images/logo-text.png" width="30%"/>
 </div>
 
 ### [<a href="https://arxiv.org/abs/2503.11647" target="_blank">arXiv</a>] [<a href="https://eternalevan.github.io/Astra-project/" target="_blank">Project Page</a>]
