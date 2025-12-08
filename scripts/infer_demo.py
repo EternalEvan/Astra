@@ -23,19 +23,16 @@ from datetime import datetime
 
 VALID_IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg"}
 class InlineVideoEncoder:
-    """最小依赖的编码器：将视频/图像张量编码为latents，不落盘。"""
 
-    def __init__(self, text_encoder_path, vae_path, device="cuda"):
-        self.device = device
+    def __init__(self, pipe: WanVideoReCamMasterPipeline, device="cuda"):
+        self.device = getattr(pipe, "device", device)
         self.tiler_kwargs = {"tiled": True, "tile_size": (34, 34), "tile_stride": (18, 16)}
         self.frame_process = v2.Compose([
             v2.ToTensor(),
             v2.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
         ])
 
-        model_manager = ModelManager(torch_dtype=torch.bfloat16, device=device)
-        model_manager.load_models([text_encoder_path, vae_path])
-        self.pipe = WanVideoReCamMasterPipeline.from_model_manager(model_manager, device=device)
+        self.pipe = pipe
 
     @staticmethod
     def _crop_and_resize(image: Image.Image) -> Image.Image:
@@ -95,17 +92,13 @@ def load_or_encode_condition(
     condition_image: Optional[str],
     start_frame: int,
     num_frames: int,
-    text_encoder_path: str,
-    vae_path: str,
     device: str,
+    pipe: WanVideoReCamMasterPipeline,
 ) -> tuple[torch.Tensor, dict]:
     if condition_pth_path:
         return load_encoded_video_from_pth(condition_pth_path, start_frame, num_frames)
 
-    if not text_encoder_path or not vae_path:
-        raise ValueError("Encoding video/image requires text_encoder_path and vae_path")
-
-    encoder = InlineVideoEncoder(text_encoder_path, vae_path, device=device)
+    encoder = InlineVideoEncoder(pipe=pipe, device=device)
 
     if condition_video:
         video_path = Path(condition_video).expanduser().resolve()
@@ -382,7 +375,27 @@ def generate_sekai_camera_embeddings_sliding(
         STAGE_1 = new_frames//2
         STAGE_2 = new_frames - STAGE_1
         
-        if direction=="left":
+        if direction=="forward":
+            print("--------------- FORWARD MODE ---------------")
+            relative_poses = []
+            for i in range(max_needed_frames):
+                if i < CONDITION_FRAMES:
+                    # 输入的条件帧默认的相机位姿为零运动
+                    pose = np.eye(4, dtype=np.float32)
+                elif i < CONDITION_FRAMES+STAGE_1+STAGE_2:
+                    # 前进
+                    forward_speed = 0.03
+
+                    pose = np.eye(4, dtype=np.float32)
+                    pose[2, 3] = -forward_speed
+                else:
+                    # 超出条件帧与目标帧的部分，保持静止
+                    pose = np.eye(4, dtype=np.float32)
+                
+                relative_pose = pose[:3, :]
+                relative_poses.append(torch.as_tensor(relative_pose))
+        
+        elif direction=="left":
             print("--------------- LEFT TURNING MODE ---------------")
             relative_poses = []
             for i in range(max_needed_frames):
@@ -1042,8 +1055,7 @@ def inference_moe_framepack_sliding_window(
     condition_video=None,
     condition_image=None,
     dit_path=None,
-    text_encoder_path=None,
-    vae_path=None,
+    wan_model_path=None,
     output_path="../examples/output_videos/output_moe_framepack_sliding.mp4",
     start_frame=0,
     initial_condition_frames=8,
@@ -1080,31 +1092,18 @@ def inference_moe_framepack_sliding_window(
     print(f"Text guidance scale: {text_guidance_scale}")
     print(f"MoE配置: experts={moe_num_experts}, top_k={moe_top_k}")
     
-    # 1. 加载初始条件
-    print("Loading initial condition frames...")
-    initial_latents, encoded_data = load_or_encode_condition(
-        condition_pth_path,
-        condition_video,
-        condition_image,
-        start_frame,
-        initial_condition_frames,
-        text_encoder_path,
-        vae_path,
-        device,
-    )
-    
-    # 2. 模型初始化
+    # 1. 模型初始化
     replace_dit_model_in_manager()
     
     model_manager = ModelManager(torch_dtype=torch.bfloat16, device="cpu")
     model_manager.load_models([
-        "/data1/zyx/WorldVideo/Wan2.1-T2V-1.3B/diffusion_pytorch_model.safetensors",
-        "/data1/zyx/WorldVideo/Wan2.1-T2V-1.3B/models_t5_umt5-xxl-enc-bf16.pth",
-        "/data1/zyx/WorldVideo/Wan2.1-T2V-1.3B/Wan2.1_VAE.pth",
+        os.path.join(wan_model_path, "diffusion_pytorch_model.safetensors"),
+        os.path.join(wan_model_path, "models_t5_umt5-xxl-enc-bf16.pth"),
+        os.path.join(wan_model_path, "Wan2.1_VAE.pth"),
     ])
     pipe = WanVideoReCamMasterPipeline.from_model_manager(model_manager, device="cuda")
 
-    # 3. 添加传统camera编码器（兼容性）
+    # 2. 添加传统camera编码器（兼容性）
     dim = pipe.dit.blocks[0].self_attn.q.weight.shape[0]
     for block in pipe.dit.blocks:
         block.cam_encoder = nn.Linear(13, dim)
@@ -1114,10 +1113,10 @@ def inference_moe_framepack_sliding_window(
         block.projector.weight = nn.Parameter(torch.eye(dim))
         block.projector.bias = nn.Parameter(torch.zeros(dim))
     
-    # 4. 添加FramePack组件
+    # 3. 添加FramePack组件
     add_framepack_components(pipe.dit)
     
-    # 5. 添加MoE组件
+    # 4. 添加MoE组件
     moe_config = {
         "num_experts": moe_num_experts,
         "top_k": moe_top_k,
@@ -1128,7 +1127,7 @@ def inference_moe_framepack_sliding_window(
     }
     add_moe_components(pipe.dit, moe_config)
     
-    # 6. 加载训练好的权重
+    # 5. 加载训练好的权重
     dit_state_dict = torch.load(dit_path, map_location="cpu")
     pipe.dit.load_state_dict(dit_state_dict, strict=False)  # 使用strict=False以兼容新增的MoE组件
     pipe = pipe.to(device)
@@ -1139,6 +1138,18 @@ def inference_moe_framepack_sliding_window(
     
     # 设置去噪步数
     pipe.scheduler.set_timesteps(50)
+    
+    # 6. 加载初始条件
+    print("Loading initial condition frames...")
+    initial_latents, encoded_data = load_or_encode_condition(
+        condition_pth_path,
+        condition_video,
+        condition_image,
+        start_frame,
+        initial_condition_frames,
+        device,
+        pipe,
+    )
     
     # 空间裁剪
     target_height, target_width = 60, 104
@@ -1498,17 +1509,16 @@ def main():
     parser.add_argument("--condition_pth",
                         type=str,
                         default=None,
-                        help="预编码的条件pth文件路径，可替代condition_video/condition_image")
+                        help="预编码的条件pth文件路径")
     parser.add_argument("--condition_video", 
                         type=str, 
                         default=None,
-                        help="Input video for novel view synthesis."
-                        )
+                        help="Input video for novel view synthesis.")
     parser.add_argument("--condition_image",
                         type=str,
-                        default="./scenes/garden_1.png",
-                        help="Input image for novel view synthesis."
-                        )
+                        default=None,
+                        required=True,
+                        help="Input image for novel view synthesis.")
     parser.add_argument("--start_frame", type=int, default=0)
     parser.add_argument("--initial_condition_frames", type=int, default=1)
     parser.add_argument("--frames_per_generation", type=int, default=8)
@@ -1516,22 +1526,21 @@ def main():
     parser.add_argument("--max_history_frames", type=int, default=100)
     parser.add_argument("--use_real_poses", default=False)
     parser.add_argument("--dit_path", type=str, 
-                        default=None, 
-                        required=True, 
+                        default="../models/Astra/checkpoints/diffusion_pytorch_model.ckpt",
                         help="path to the pretrained DiT MoE model checkpoint")
+    parser.add_argument("--wan_model_path",
+                        type=str,
+                        default="../models/Wan-AI/Wan2.1-T2V-1.3B",
+                        help="path to Wan2.1-T2V-1.3B")
     parser.add_argument("--output_path", type=str, 
-                       default='./examples/output_videos/output_moe_framepack_sliding.mp4')
-    parser.add_argument("--prompt", type=str, default="",
+                       default='../examples/output_videos/output_moe_framepack_sliding.mp4')
+    parser.add_argument("--prompt", 
+                        type=str, 
+                        default="",
                         help="text prompt for video generation")
     parser.add_argument("--device", type=str, default="cuda")
     parser.add_argument("--add_icons", action="store_true", default=False,
                         help="在生成的视频上叠加控制图标")
-    parser.add_argument("--text_encoder_path", type=str,
-                        default="/data1/zyx/WorldVideo/Wan2.1-T2V-1.3B/models_t5_umt5-xxl-enc-bf16.pth",
-                        help="文本编码器权重路径，用于在线编码条件视频/图像")
-    parser.add_argument("--vae_path", type=str,
-                        default="/data1/zyx/WorldVideo/Wan2.1-T2V-1.3B/Wan2.1_VAE.pth",
-                        help="VAE权重路径，用于在线编码条件视频/图像")
     
     # 模态类型参数
     parser.add_argument("--modality_type", type=str, choices=["sekai", "nuscenes", "openx"], 
@@ -1589,8 +1598,7 @@ def main():
         condition_video=args.condition_video,
         condition_image=args.condition_image,
         dit_path=args.dit_path,
-        text_encoder_path=args.text_encoder_path,
-        vae_path=args.vae_path,
+        wan_model_path=args.wan_model_path,
         output_path=args.output_path,
         start_frame=args.start_frame,
         initial_condition_frames=args.initial_condition_frames,

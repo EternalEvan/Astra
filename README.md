@@ -140,33 +140,43 @@ python download_wan2.1.py
 
 Please download from [huggingface](https://huggingface.co/wjque/lyra/blob/main/diffusion_pytorch_model.ckpt) and place it in ```models/Astra/checkpoints```.
 
-Step 3: Test the example videos
+Step 3: Test the example image
 ```shell
-python inference_astra.py --cam_type 1
+python infer_demo.py \
+  --dit_path ../models/Astra/checkpoints/diffusion_pytorch_model.ckpt \
+  --wan_model_path ../models/Wan-AI/Wan2.1-T2V-1.3B \
+  --condition_image ../examples/condition_images/garden_1.png \
+  --direction forward_left \
+  --prompt "A sunlit European street lined with historic buildings and vibrant greenery creates a warm, charming, and inviting atmosphere. The scene shows a picturesque open square paved with red bricks, surrounded by classic narrow townhouses featuring tall windows, gabled roofs, and dark-painted facades. On the right side, a lush arrangement of potted plants and blooming flowers adds rich color and texture to the foreground. A vintage-style streetlamp stands prominently near the center-right, contributing to the timeless character of the street. Mature trees frame the background, their leaves glowing in the warm afternoon sunlight. Bicycles are visible along the edges of the buildings, reinforcing the urban yet leisurely feel. The sky is bright blue with scattered clouds, and soft sun flares enter the frame from the left, enhancing the scene’s inviting, peaceful mood."  \
+  --output_path ../examples/output_videos/output_moe_framepack_sliding.mp4 \
+
 ```
 
-Step 4: Test your own videos
+Step 4: Test your own images
 
-If you want to test your own videos, you need to prepare your test data following the structure of the ```example_test_data``` folder. This includes N mp4 videos, each with at least 81 frames, and a ```metadata.csv``` file that stores their paths and corresponding captions. You can refer to the [Prompt Extension section](https://github.com/Wan-Video/Wan2.1?tab=readme-ov-file#2-using-prompt-extension) in Wan2.1 for guidance on preparing video captions. 
+If you want to test your own images, you need to prepare images and corresponding prompts. You can refer to the [Prompt Extension section](https://github.com/Wan-Video/Wan2.1?tab=readme-ov-file#2-using-prompt-extension) in Wan2.1 for guidance on preparing captions. 
 
 ```shell
-python inference_astra.py --cam_type 1 --dataset_path path/to/your/data
+python infer_demo.py \
+  --dit_path path/to/your/dit_ckpt \
+  --wan_model_path path/to/your/Wan2.1-T2V-1.3B \
+  --condition_image path/to/your/image \
+  --direction left \
+  --prompt your_prompt \
+  --output_path path/to/your/output_video
 ```
 
 We provide several preset camera types, as shown in the table below. Additionally, you can generate new trajectories for testing.
 
-| cam_type       | Trajectory                  |
-|-------------------|-----------------------------|
-| 1    | Pan Right                   |
-| 2 | Pan Left                    |
-| 3 | Tilt Up                     |
-| 4 | Tilt Down                   |
-| 5 | Zoom In                     |
-| 6 | Zoom Out                    |
-| 7 | Translate Up (with rotation)   |
-| 8 | Translate Down (with rotation) |
-| 9 | Arc Left (with rotation)    |
-| 10 | Arc Right (with rotation)   |
+| direction       | Trajectory                  |
+|-----------------|-----------------------------|
+| forward         | Move Forward (Straight)     |
+| left            | Rotate Left In Place        |
+| right           | Rotate Right In Place       |
+| forward_left    | Move Forward + Rotate Left  |
+| forward_right   | Move Forward + Rotate Right |
+| s_curve         | S-shaped Trajectory         |
+| left_right      | Rotate Left → Rotate Right  |
 
 ### Training
 
