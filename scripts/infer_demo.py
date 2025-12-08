@@ -1,5 +1,7 @@
 import os
 import sys
+from pathlib import Path
+from typing import Optional
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(ROOT_DIR)
@@ -14,9 +16,124 @@ from diffsynth import WanVideoReCamMasterPipeline, ModelManager
 import argparse
 from torchvision.transforms import v2
 from einops import rearrange
+from scipy.spatial.transform import Rotation as R
 import random
 import copy
 from datetime import datetime
+
+VALID_IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg"}
+class InlineVideoEncoder:
+    """最小依赖的编码器：将视频/图像张量编码为latents，不落盘。"""
+
+    def __init__(self, text_encoder_path, vae_path, device="cuda"):
+        self.device = device
+        self.tiler_kwargs = {"tiled": True, "tile_size": (34, 34), "tile_stride": (18, 16)}
+        self.frame_process = v2.Compose([
+            v2.ToTensor(),
+            v2.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
+        ])
+
+        model_manager = ModelManager(torch_dtype=torch.bfloat16, device=device)
+        model_manager.load_models([text_encoder_path, vae_path])
+        self.pipe = WanVideoReCamMasterPipeline.from_model_manager(model_manager, device=device)
+
+    @staticmethod
+    def _crop_and_resize(image: Image.Image) -> Image.Image:
+        target_w, target_h = 832, 480
+        return v2.functional.resize(
+            image,
+            (round(target_h), round(target_w)),
+            interpolation=v2.InterpolationMode.BILINEAR,
+        )
+
+    def preprocess_frame(self, image: Image.Image) -> torch.Tensor:
+        image = image.convert("RGB")
+        image = self._crop_and_resize(image)
+        return self.frame_process(image)
+
+    def load_video_frames(self, video_path: Path) -> Optional[torch.Tensor]:
+        reader = imageio.get_reader(str(video_path))
+        frames = []
+        for frame_data in reader:
+            frame = Image.fromarray(frame_data)
+            frames.append(self.preprocess_frame(frame))
+        reader.close()
+
+        if not frames:
+            return None
+
+        frames = torch.stack(frames, dim=0)
+        return rearrange(frames, "T C H W -> C T H W")
+
+    def encode_frames_to_latents(self, frames: torch.Tensor) -> torch.Tensor:
+        frames = frames.unsqueeze(0).to(self.device, dtype=torch.bfloat16)
+        with torch.no_grad():
+            latents = self.pipe.encode_video(frames, **self.tiler_kwargs)[0]
+
+        if latents.dim() == 5 and latents.shape[0] == 1:
+            latents = latents.squeeze(0)
+        return latents.cpu()
+    
+def image_to_frame_stack(
+    image_path: Path, 
+    encoder: InlineVideoEncoder, 
+    repeat_count: int = 10
+) -> torch.Tensor:
+    """将单张图片重复成指定帧数的张量，shape为[C, T, H, W]"""
+    if image_path.suffix.lower() not in VALID_IMAGE_EXTENSIONS:
+        raise ValueError(f"不支持的图片格式: {image_path.suffix}")
+
+    image = Image.open(str(image_path))
+    frame = encoder.preprocess_frame(image)
+    frames = torch.stack([frame for _ in range(repeat_count)], dim=0)
+    return rearrange(frames, "T C H W -> C T H W")
+
+
+def load_or_encode_condition(
+    condition_pth_path: Optional[str],
+    condition_video: Optional[str],
+    condition_image: Optional[str],
+    start_frame: int,
+    num_frames: int,
+    text_encoder_path: str,
+    vae_path: str,
+    device: str,
+) -> tuple[torch.Tensor, dict]:
+    if condition_pth_path:
+        return load_encoded_video_from_pth(condition_pth_path, start_frame, num_frames)
+
+    if not text_encoder_path or not vae_path:
+        raise ValueError("Encoding video/image requires text_encoder_path and vae_path")
+
+    encoder = InlineVideoEncoder(text_encoder_path, vae_path, device=device)
+
+    if condition_video:
+        video_path = Path(condition_video).expanduser().resolve()
+        if not video_path.exists():
+            raise FileNotFoundError(f"File not Found: {video_path}")
+        frames = encoder.load_video_frames(video_path)
+        if frames is None:
+            raise ValueError(f"no valid frames in {video_path}")
+    elif condition_image:
+        image_path = Path(condition_image).expanduser().resolve()
+        if not image_path.exists():
+            raise FileNotFoundError(f"File not Found: {image_path}")
+        frames = image_to_frame_stack(image_path, encoder, repeat_count=10)
+    else:
+        raise ValueError("condition video or image is needed for video generation.")
+
+    latents = encoder.encode_frames_to_latents(frames)
+    encoded_data = {"latents": latents}
+
+    if start_frame + num_frames > latents.shape[1]:
+        raise ValueError(
+            f"Not enough frames after encoding: requested {start_frame + num_frames}, available {latents.shape[1]}"
+        )
+
+    condition_latents = latents[:, start_frame:start_frame + num_frames, :, :]
+    return condition_latents, encoded_data
+
+
 
 def compute_relative_pose_matrix(pose1, pose2):
     """
@@ -67,7 +184,6 @@ def load_encoded_video_from_pth(pth_path, start_frame=0, num_frames=10):
     print(f"Extracted condition latents shape: {condition_latents.shape}")
     
     return condition_latents, encoded_data
-
 
 def compute_relative_pose(pose_a, pose_b, use_torch=False):
     """计算相机B相对于相机A的相对位姿矩阵"""
@@ -507,7 +623,7 @@ def generate_sekai_camera_embeddings_sliding(
                 relative_poses.append(torch.as_tensor(relative_pose))
                 
             else:
-                raise ValueError(f"未定义的相机运动方向: {direction}")
+                raise ValueError(f"Not Defined Direction: {direction}")
             
         pose_embedding = torch.stack(relative_poses, dim=0)
         pose_embedding = rearrange(pose_embedding, 'b c d -> b (c d)')
@@ -922,8 +1038,12 @@ def overlay_controls(frame_img, pose_vec, icons):
 
 
 def inference_moe_framepack_sliding_window(
-    condition_pth_path,
-    dit_path,
+    condition_pth_path=None,
+    condition_video=None,
+    condition_image=None,
+    dit_path=None,
+    text_encoder_path=None,
+    vae_path=None,
     output_path="../examples/output_videos/output_moe_framepack_sliding.mp4",
     start_frame=0,
     initial_condition_frames=8,
@@ -960,18 +1080,31 @@ def inference_moe_framepack_sliding_window(
     print(f"Text guidance scale: {text_guidance_scale}")
     print(f"MoE配置: experts={moe_num_experts}, top_k={moe_top_k}")
     
-    # 1. 模型初始化
+    # 1. 加载初始条件
+    print("Loading initial condition frames...")
+    initial_latents, encoded_data = load_or_encode_condition(
+        condition_pth_path,
+        condition_video,
+        condition_image,
+        start_frame,
+        initial_condition_frames,
+        text_encoder_path,
+        vae_path,
+        device,
+    )
+    
+    # 2. 模型初始化
     replace_dit_model_in_manager()
     
     model_manager = ModelManager(torch_dtype=torch.bfloat16, device="cpu")
     model_manager.load_models([
-        "/mnt/data/louis_crq/models/Wan2.1-T2V-1.3B/diffusion_pytorch_model.safetensors",
-        "/mnt/data/louis_crq/models/Wan2.1-T2V-1.3B/models_t5_umt5-xxl-enc-bf16.pth",
-        "/mnt/data/louis_crq/models/Wan2.1-T2V-1.3B/Wan2.1_VAE.pth",
+        "/data1/zyx/WorldVideo/Wan2.1-T2V-1.3B/diffusion_pytorch_model.safetensors",
+        "/data1/zyx/WorldVideo/Wan2.1-T2V-1.3B/models_t5_umt5-xxl-enc-bf16.pth",
+        "/data1/zyx/WorldVideo/Wan2.1-T2V-1.3B/Wan2.1_VAE.pth",
     ])
     pipe = WanVideoReCamMasterPipeline.from_model_manager(model_manager, device="cuda")
 
-    # 2. 添加传统camera编码器（兼容性）
+    # 3. 添加传统camera编码器（兼容性）
     dim = pipe.dit.blocks[0].self_attn.q.weight.shape[0]
     for block in pipe.dit.blocks:
         block.cam_encoder = nn.Linear(13, dim)
@@ -981,10 +1114,10 @@ def inference_moe_framepack_sliding_window(
         block.projector.weight = nn.Parameter(torch.eye(dim))
         block.projector.bias = nn.Parameter(torch.zeros(dim))
     
-    # 3. 添加FramePack组件
+    # 4. 添加FramePack组件
     add_framepack_components(pipe.dit)
     
-    # 4. 添加MoE组件
+    # 5. 添加MoE组件
     moe_config = {
         "num_experts": moe_num_experts,
         "top_k": moe_top_k,
@@ -995,7 +1128,7 @@ def inference_moe_framepack_sliding_window(
     }
     add_moe_components(pipe.dit, moe_config)
     
-    # 5. 加载训练好的权重
+    # 6. 加载训练好的权重
     dit_state_dict = torch.load(dit_path, map_location="cpu")
     pipe.dit.load_state_dict(dit_state_dict, strict=False)  # 使用strict=False以兼容新增的MoE组件
     pipe = pipe.to(device)
@@ -1006,14 +1139,6 @@ def inference_moe_framepack_sliding_window(
     
     # 设置去噪步数
     pipe.scheduler.set_timesteps(50)
-    
-    # 6. 加载初始条件
-    print("Loading initial condition frames...")
-    initial_latents, encoded_data = load_encoded_video_from_pth(
-        condition_pth_path, 
-        start_frame=start_frame,
-        num_frames=initial_condition_frames
-    )
     
     # 空间裁剪
     target_height, target_width = 60, 104
@@ -1370,23 +1495,43 @@ def main():
     parser = argparse.ArgumentParser(description="MoE FramePack滑动窗口视频生成 - 支持多模态")
     
     # 基础参数
-    parser.add_argument("--condition_pth", type=str, 
-                        default="../examples/condition_pth/garden_1.pth")
+    parser.add_argument("--condition_pth",
+                        type=str,
+                        default=None,
+                        help="预编码的条件pth文件路径，可替代condition_video/condition_image")
+    parser.add_argument("--condition_video", 
+                        type=str, 
+                        default=None,
+                        help="Input video for novel view synthesis."
+                        )
+    parser.add_argument("--condition_image",
+                        type=str,
+                        default="./scenes/garden_1.png",
+                        help="Input image for novel view synthesis."
+                        )
     parser.add_argument("--start_frame", type=int, default=0)
     parser.add_argument("--initial_condition_frames", type=int, default=1)
     parser.add_argument("--frames_per_generation", type=int, default=8)
     parser.add_argument("--total_frames_to_generate", type=int, default=24)
     parser.add_argument("--max_history_frames", type=int, default=100)
     parser.add_argument("--use_real_poses", default=False)
-    parser.add_argument("--dit_path", type=str, default=None, required=True, 
+    parser.add_argument("--dit_path", type=str, 
+                        default=None, 
+                        required=True, 
                         help="path to the pretrained DiT MoE model checkpoint")
     parser.add_argument("--output_path", type=str, 
                        default='./examples/output_videos/output_moe_framepack_sliding.mp4')
-    parser.add_argument("--prompt", type=str, default=None, 
+    parser.add_argument("--prompt", type=str, default="",
                         help="text prompt for video generation")
     parser.add_argument("--device", type=str, default="cuda")
     parser.add_argument("--add_icons", action="store_true", default=False,
                         help="在生成的视频上叠加控制图标")
+    parser.add_argument("--text_encoder_path", type=str,
+                        default="/data1/zyx/WorldVideo/Wan2.1-T2V-1.3B/models_t5_umt5-xxl-enc-bf16.pth",
+                        help="文本编码器权重路径，用于在线编码条件视频/图像")
+    parser.add_argument("--vae_path", type=str,
+                        default="/data1/zyx/WorldVideo/Wan2.1-T2V-1.3B/Wan2.1_VAE.pth",
+                        help="VAE权重路径，用于在线编码条件视频/图像")
     
     # 模态类型参数
     parser.add_argument("--modality_type", type=str, choices=["sekai", "nuscenes", "openx"], 
@@ -1425,10 +1570,27 @@ def main():
     # 验证NuScenes参数
     if args.modality_type == "nuscenes" and not args.scene_info_path:
         print("⚠️ 使用NuScenes模态但未提供scene_info_path，将使用合成pose数据")
+        
+    if not args.use_gt_prompt and (args.prompt is None or args.prompt.strip() == ""):
+        print("⚠️ 未提供prompt, 将使用空字符串作为prompt")
+        
+    if not any([args.condition_pth, args.condition_video, args.condition_image]):
+        raise ValueError("需要提供condition_pth、condition_video或condition_image之一作为条件输入")
+    
+    if args.condition_pth:
+        print(f"使用预编码pth: {args.condition_pth}")
+    elif args.condition_video:
+        print(f"使用条件视频进行在线编码: {args.condition_video}")
+    elif args.condition_image:
+        print(f"使用条件图片进行在线编码: {args.condition_image} (重复10帧)")
     
     inference_moe_framepack_sliding_window(
         condition_pth_path=args.condition_pth,
+        condition_video=args.condition_video,
+        condition_image=args.condition_image,
         dit_path=args.dit_path,
+        text_encoder_path=args.text_encoder_path,
+        vae_path=args.vae_path,
         output_path=args.output_path,
         start_frame=args.start_frame,
         initial_condition_frames=args.initial_condition_frames,
