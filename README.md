@@ -15,12 +15,79 @@
 </div>
 
 ## 🔥 Updates
-- __[2024.11.17]__: Release the [project page](https://eternalevan.github.io/Astra-project/).
-- __[2024.12.09]__: Release the training and inference code, model checkpoint.
-  
+- __[2025.11.17]__: Release the [project page](https://eternalevan.github.io/Astra-project/).
+- __[2025.12.09]__: Release the training and inference code, model checkpoint.
+
+## 🎯 TODO List
+
+- [ ] **Release full inference pipelines** for additional scenarios:
+  - [ ] 🚗 Autonomous driving
+  - [ ] 🤖 Robotic manipulation
+  - [ ] 🛸 Drone navigation / exploration
+
+
+- [ ] **Open-source training scripts**:
+  - [ ] ⬆️ Action-conditioned autoregressive denoising training
+  - [ ] 🔄 Multi-scenario joint training pipeline
+
+- [ ] **Release dataset preprocessing tools**
+
+- [ ] **Provide unified evaluation toolkit**
 ## 📖 Introduction
 
-**TL;DR:** Astra is an interactive world model capable of understanding and generating realistic visual outcomes across diverse scenarios and action inputs.
+**TL;DR:** Astra is an **interactive world model** that delivers realistic long-horizon video rollouts under a wide range of scenarios and action inputs.
+
+## Gallery
+
+### Astra+Wan2.1
+
+<table border="0" style="width: 100%; text-align: left; margin-top: 20px;">
+  <tr>
+      <td>
+          <video src="https://github.com/user-attachments/assets/715a5b66-3966-4923-aa00-02315fb07761"
+                 style="width:100%; height:180px; object-fit:cover;" 
+                 controls autoplay loop muted></video>
+      </td>
+      <td>
+          <video src="https://github.com/user-attachments/assets/1451947e-1851-4b57-a666-a44ffea7b10c"
+                 style="width:100%; height:180px; object-fit:cover;" 
+                 controls autoplay loop muted></video>
+      </td>
+      <td>
+          <video src="https://github.com/user-attachments/assets/c7156c4d-d51d-493c-995e-5113c3d49abb"
+                 style="width:100%; height:180px; object-fit:cover;" 
+                 controls autoplay loop muted></video>
+     </td>
+      <td>
+          <video src="https://github.com/user-attachments/assets/f7550916-e224-497a-b0b9-84479607c962"
+                 style="width:100%; height:180px; object-fit:cover;" 
+                 controls autoplay loop muted></video>
+     </td>
+  </tr>
+
+  <tr>
+      <td>
+          <video src="https://github.com/user-attachments/assets/d899d704-c706-4e64-a24b-eea174d2173d"
+                 style="width:100%; height:180px; object-fit:cover;" 
+                 controls autoplay loop muted></video>
+      </td>
+      <td>
+          <video src="https://github.com/user-attachments/assets/c1d8beb2-3102-468a-8019-624d89fba125"
+                 style="width:100%; height:180px; object-fit:cover;" 
+                 controls autoplay loop muted></video>
+      </td>
+      <td>
+          <video src="https://github.com/user-attachments/assets/2aabc10b-f945-4d9d-b24a-baed17fcfe14"
+                 style="width:100%; height:180px; object-fit:cover;" 
+                 controls autoplay loop muted></video>
+     </td>
+      <td>
+          <video src="https://github.com/user-attachments/assets/5c03e6ae-0fc2-4e09-a5b5-f37d04e7bbf8"
+                 style="width:100%; height:180px; object-fit:cover;" 
+                 controls autoplay loop muted></video>
+     </td>
+  </tr>
+</table>
 
 <!-- ## 🚀 Trail: Try ReCamMaster with Your Own Videos
 
@@ -44,7 +111,8 @@
 If you would like to use ReCamMaster as a baseline and need qualitative or quantitative comparisons, please feel free to drop an email to [jianhongbai@zju.edu.cn](mailto:jianhongbai@zju.edu.cn). We can assist you with batch inference of our model. -->
 
 ## ⚙️ Code: Astra + Wan2.1 (Inference & Training)
-The model utilized in our paper is an internally developed T2V model, not [Wan2.1](https://github.com/Wan-Video/Wan2.1). Due to company policy restrictions, we are unable to open-source the model used in the paper. Consequently, we migrated Asta to Wan2.1 to validate the effectiveness of our method. Due to differences in the underlying T2V model, you may not achieve the same results as demonstrated in the demo.
+Astra is built upon [Wan2.1-1.3B](https://github.com/Wan-Video/Wan2.1), a diffusion-based video generation model. We provide inference scripts to help you quickly generate videos from images and action inputs. Follow the steps below:
+
 ### Inference
 Step 1: Set up the environment
 
@@ -70,7 +138,7 @@ python download_wan2.1.py
 ```
 2. Download the pre-trained Astra checkpoint
 
-Please download from [huggingface](https://huggingface.co/KwaiVGI/ReCamMaster-Wan2.1/blob/main/step20000.ckpt) and place it in ```models/Astra/checkpoints```.
+Please download from [huggingface](https://huggingface.co/wjque/lyra/blob/main/diffusion_pytorch_model.ckpt) and place it in ```models/Astra/checkpoints```.
 
 Step 3: Test the example videos
 ```shell
@@ -291,13 +359,10 @@ Feel free to explore these outstanding related works, including but not limited 
 
 Please leave us a star 🌟 and cite our paper if you find our work helpful.
 ```
-@misc{bai2025recammaster,
-      title={Astra: General Interactive World Model with Autoregressive Denoising}, 
-      author={Yixuan Zhu, Feng Jiaqi, Wenzhao Zheng, Yuan Gao, Xin Tao, Pengfei Wan, Jiwen Lu, Jie Zhou},
-      year={2025},
-      eprint={2503.11647},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2503.11647}, 
+@inproceedings{zhu2025astra,
+  title={Astra: General Interactive World Model with Autoregressive Denoising},
+  author={Zhu, Yixuan and Feng, Jiaqi and Zheng, Wenzhao and Gao, Yuan and Tao, Xin and Wan, Pengfei and Zhou, Jie and Lu, Jiwen},
+  booktitle={arxiv},
+  year={2025}
 }
 ```
