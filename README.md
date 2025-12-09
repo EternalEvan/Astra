@@ -2,8 +2,8 @@
 
 <div align="center">
 
-  <div style="margin-top: 0; margin-bottom: -30px;">
-    <img src="./assets/images/logo-text.png" width="40%" />
+  <div style="margin-top: 0; margin-bottom: -20px;">
+    <img src="./assets/images/logo-text-2.png" width="50%" />
   </div>
 
   <h3 style="margin-top: 0;">
