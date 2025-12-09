@@ -28,25 +28,7 @@
 <sup>1</sup>Tsinghua University, <sup>2</sup>Kuaishou Technology. 
 </div>
 
-## 🔥 Updates
-- __[2025.11.17]__: Release the [project page](https://eternalevan.github.io/Astra-project/).
-- __[2025.12.09]__: Release the training and inference code, model checkpoint.
 
-## 🎯 TODO List
-
-- [ ] **Release full inference pipelines** for additional scenarios:
-  - [ ] 🚗 Autonomous driving
-  - [ ] 🤖 Robotic manipulation
-  - [ ] 🛸 Drone navigation / exploration
-
-
-- [ ] **Open-source training scripts**:
-  - [ ] ⬆️ Action-conditioned autoregressive denoising training
-  - [ ] 🔄 Multi-scenario joint training pipeline
-
-- [ ] **Release dataset preprocessing tools**
-
-- [ ] **Provide unified evaluation toolkit**
 ## 📖 Introduction
 
 **TL;DR:** Astra is an **interactive world model** that delivers realistic long-horizon video rollouts under a wide range of scenarios and action inputs.
@@ -103,6 +85,25 @@
   </tr>
 </table>
 
+## 🔥 Updates
+- __[2025.11.17]__: Release the [project page](https://eternalevan.github.io/Astra-project/).
+- __[2025.12.09]__: Release the training and inference code, model checkpoint.
+
+## 🎯 TODO List
+
+- [ ] **Release full inference pipelines** for additional scenarios:
+  - [ ] 🚗 Autonomous driving
+  - [ ] 🤖 Robotic manipulation
+  - [ ] 🛸 Drone navigation / exploration
+
+
+- [ ] **Open-source training scripts**:
+  - [ ] ⬆️ Action-conditioned autoregressive denoising training
+  - [ ] 🔄 Multi-scenario joint training pipeline
+
+- [ ] **Release dataset preprocessing tools**
+
+- [ ] **Provide unified evaluation toolkit**
 <!-- ## 🚀 Trail: Try ReCamMaster with Your Own Videos
 
 **Update:** We are actively processing the videos uploaded by users. So far, we have sent the inference results to the email addresses of the first **1180** testers. You should receive an email titled "Inference Results of ReCamMaster" from either jianhongbai@zju.edu.cn or cpurgicn@gmail.com. Please also check your spam folder, and let us know if you haven't received the email after a long time. If you enjoyed the videos we created, please consider giving us a star 🌟.
@@ -124,7 +125,7 @@
 
 If you would like to use ReCamMaster as a baseline and need qualitative or quantitative comparisons, please feel free to drop an email to [jianhongbai@zju.edu.cn](mailto:jianhongbai@zju.edu.cn). We can assist you with batch inference of our model. -->
 
-## ⚙️ Code: Astra + Wan2.1 (Inference & Training)
+## ⚙️ Run Astra (Inference)
 Astra is built upon [Wan2.1-1.3B](https://github.com/Wan-Video/Wan2.1), a diffusion-based video generation model. We provide inference scripts to help you quickly generate videos from images and action inputs. Follow the steps below:
 
 ### Inference
