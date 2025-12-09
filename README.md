@@ -192,6 +192,16 @@ We provide several preset camera types, as shown in the table below. Additionall
 | `s_curve`         | S-shaped Trajectory         |
 | `left_right`      | Rotate Left → Rotate Right  |
 
+## Future Work 🚀
+
+Looking ahead, we plan to further enhance Astra in several directions:
+
+- **Training with Wan-2.2:** Upgrade our model using the latest Wan-2.2 framework to release a more powerful version with improved generation quality.  
+- **3D Spatial Consistency:** Explore techniques to better preserve 3D consistency across frames for more coherent and realistic video generation.  
+- **Long-Term Memory:** Incorporate mechanisms for long-term memory, enabling the model to handle extended temporal dependencies and complex action sequences.  
+
+These directions aim to push Astra towards more robust and interactive video world modeling.
+
 <!-- ### Training
 
 Step 1: Set up the environment
