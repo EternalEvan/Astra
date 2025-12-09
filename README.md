@@ -192,7 +192,7 @@ We provide several preset camera types, as shown in the table below. Additionall
 | `s_curve`         | S-shaped Trajectory         |
 | `left_right`      | Rotate Left → Rotate Right  |
 
-### Training
+<!-- ### Training
 
 Step 1: Set up the environment
 
@@ -224,7 +224,7 @@ Step 4: Test the model
 
 ```shell
 python inference_recammaster.py --cam_type 1 --ckpt_path path/to/the/checkpoint
-```
+``` -->
 
 <!-- ## 📷 Dataset: MultiCamVideo Dataset
 ### 1. Dataset Introduction
