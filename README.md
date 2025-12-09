@@ -3,7 +3,7 @@
 <div align="center">
 
   <div style="margin-top: 0; margin-bottom: -30px;">
-    <img src="./assets/images/logo-text.png" width="30%" />
+    <img src="./assets/images/logo-text.png" width="40%" />
   </div>
 
   <h3 style="margin-top: 0;">
