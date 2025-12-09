@@ -152,7 +152,7 @@ python download_wan2.1.py
 ```
 2. Download the pre-trained Astra checkpoint
 
-Please download from [huggingface](https://huggingface.co/wjque/lyra/blob/main/diffusion_pytorch_model.ckpt) and place it in ```models/Astra/checkpoints```.
+Please download from [huggingface](https://huggingface.co/EvanEternal/Astra/blob/main/models/Astra/checkpoints/diffusion_pytorch_model.ckpt) and place it in ```models/Astra/checkpoints```.
 
 Step 3: Test the example image
 ```shell
