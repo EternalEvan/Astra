@@ -21,7 +21,7 @@
 
 <div align="center">
 
-**[Yixuan Zhu<sup>1</sup>](https://jianhongbai.github.io/), [Jiaqi Feng<sup>1</sup>](https://menghanxia.github.io/), [Wenzhao Zheng<sup>1 †</sup>](https://fuxiao0719.github.io/), [Yuan Gao<sup>2</sup>](https://xinntao.github.io/), [Xin Tao<sup>2</sup>](https://scholar.google.com/citations?user=dCik-2YAAAAJ&hl=en), [Pengfei Wan<sup>2</sup>](https://openreview.net/profile?id=~Jinwen_Cao1), [Jie Zhou <sup>1</sup>](https://person.zju.edu.cn/en/lzz), [Jiwen Lu<sup>1</sup>](https://person.zju.edu.cn/en/huhaoji)**
+**[Yixuan Zhu<sup>1</sup>](https://eternalevan.github.io/), [Jiaqi Feng<sup>1</sup>](https://github.com/Aurora-edu/), [Wenzhao Zheng<sup>1 †</sup>](https://wzzheng.net), [Yuan Gao<sup>2</sup>](https://openreview.net/profile?id=~Yuan_Gao32), [Xin Tao<sup>2</sup>](https://www.xtao.website), [Pengfei Wan<sup>2</sup>](https://scholar.google.com/citations?user=P6MraaYAAAAJ&hl=en), [Jie Zhou <sup>1</sup>](https://scholar.google.com/citations?user=6a79aPwAAAAJ&hl=en&authuser=1), [Jiwen Lu<sup>1</sup>](https://ivg.au.tsinghua.edu.cn/Jiwen_Lu/)**
 <!-- <br> -->
 († Project leader)
 
