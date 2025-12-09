@@ -161,22 +161,22 @@ python infer_demo.py \
   --dit_path path/to/your/dit_ckpt \
   --wan_model_path path/to/your/Wan2.1-T2V-1.3B \
   --condition_image path/to/your/image \
-  --direction left \
+  --direction your_direction \
   --prompt your_prompt \
   --output_path path/to/your/output_video
 ```
 
 We provide several preset camera types, as shown in the table below. Additionally, you can generate new trajectories for testing.
 
-| direction       | Trajectory                  |
-|-----------------|-----------------------------|
-| forward         | Move Forward (Straight)     |
-| left            | Rotate Left In Place        |
-| right           | Rotate Right In Place       |
-| forward_left    | Move Forward + Rotate Left  |
-| forward_right   | Move Forward + Rotate Right |
-| s_curve         | S-shaped Trajectory         |
-| left_right      | Rotate Left → Rotate Right  |
+| direction         | Trajectory                  |
+|-------------------|-----------------------------|
+| `forward`         | Move Forward (Straight)     |
+| `left`            | Rotate Left In Place        |
+| `right`           | Rotate Right In Place       |
+| `forward_left`    | Move Forward + Rotate Left  |
+| `forward_right`   | Move Forward + Rotate Right |
+| `s_curve`         | S-shaped Trajectory         |
+| `left_right`      | Rotate Left → Rotate Right  |
 
 ### Training
 
