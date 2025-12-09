@@ -9,7 +9,7 @@ import json
 import numpy as np
 import random
 import traceback
-from diffsynth import WanVideoReCamMasterPipeline, ModelManager
+from diffsynth import WanVideoAstraPipeline, ModelManager
 from torchvision.transforms import v2
 from einops import rearrange
 from pose_classifier import PoseClassifier
@@ -902,7 +902,7 @@ class MultiDatasetLightningModelForTrain(pl.LightningModule):
             model_manager.load_models([dit_path])
         model_manager.load_models(["/mnt/data/louis_crq/models/Wan2.1-T2V-1.3B/Wan2.1_VAE.pth"])
         
-        self.pipe = WanVideoReCamMasterPipeline.from_model_manager(model_manager)
+        self.pipe = WanVideoAstraPipeline.from_model_manager(model_manager)
         self.pipe.scheduler.set_timesteps(1000, training=True)
 
         # Add FramePack's clean_x_embedder

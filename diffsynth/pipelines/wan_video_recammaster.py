@@ -21,7 +21,7 @@ from ..models.wan_video_vae import RMS_norm, CausalConv3d, Upsample
 
 
 
-class WanVideoReCamMasterPipeline(BasePipeline):
+class WanVideoAstraPipeline(BasePipeline):
 
     def __init__(self, device="cuda", torch_dtype=torch.float16, tokenizer_path=None,condition_frames=None,target_frames=None):
         super().__init__(device=device, torch_dtype=torch_dtype)
@@ -141,7 +141,7 @@ class WanVideoReCamMasterPipeline(BasePipeline):
     def from_model_manager(model_manager: ModelManager, torch_dtype=None, device=None):
         if device is None: device = model_manager.device
         if torch_dtype is None: torch_dtype = model_manager.torch_dtype
-        pipe = WanVideoReCamMasterPipeline(device=device, torch_dtype=torch_dtype)
+        pipe = WanVideoAstraPipeline(device=device, torch_dtype=torch_dtype)
         pipe.fetch_models(model_manager)
         return pipe
     

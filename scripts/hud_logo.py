@@ -7,7 +7,7 @@ os.makedirs("wasd_ui", exist_ok=True)
 key_size = (48, 48)
 corner = 10
 bg_padding = 6
-font = ImageFont.truetype("arial.ttf", 28)  # 替换成本地支持的字体
+font = ImageFont.truetype("arial.ttf", 28)  # Replace with locally supported font
 
 def rounded_rect(im, bbox, radius, fill):
     draw = ImageDraw.Draw(im, "RGBA")
