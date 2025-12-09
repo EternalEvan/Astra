@@ -2,7 +2,7 @@
 
 <div align="center">
 
-  <div style="margin-top: 0; margin-bottom: -20px;">
+  <div style="margin-top: 0; margin-bottom: -30px;">
     <img src="./assets/images/logo-text.png" width="30%" />
   </div>
 
@@ -13,7 +13,7 @@
     🏠
     [<a href="https://eternalevan.github.io/Astra-project/" target="_blank">Project Page</a>]
     &nbsp;&nbsp;
-    <img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" width="22"/>
+    🤗
     [<a href="https://huggingface.co/EvanEternal/Astra" target="_blank">Huggingface</a>]
   </h3>
 
