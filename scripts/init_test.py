@@ -1,1 +1,0 @@
-from diffsynth.pipelines.wan_video_recam_future import WanVideoReCamMasterFuturePipeline
