@@ -176,7 +176,8 @@ def load_encoded_video_from_pth(pth_path, start_frame=0, num_frames=10):
         raise ValueError(f"Not enough frames: requested {start_frame + num_frames}, available {full_latents.shape[1]}")
     
     condition_latents = full_latents[:, start_frame:start_frame + num_frames, :, :]
-    print(f"Extracted condition latents shape: {condition_latents.shape}")
+    
+    print(f"✅ Extracted condition latents shape: {condition_latents.shape}")
     
     return condition_latents, encoded_data
 
@@ -257,7 +258,8 @@ def add_framepack_components(dit_model):
         dit_model.clean_x_embedder = CleanXEmbedder(inner_dim)
         model_dtype = next(dit_model.parameters()).dtype
         dit_model.clean_x_embedder = dit_model.clean_x_embedder.to(dtype=model_dtype)
-        print("Added FramePack clean_x_embedder component")
+        
+        # print("✅ Added FramePack clean_x_embedder component")
 
 
 def add_moe_components(dit_model, moe_config):
@@ -287,7 +289,7 @@ def add_moe_components(dit_model, moe_config):
             top_k=moe_config.get("top_k", 2)
         )
         
-        print(f"Block {i} added MoE component (unified_dim: {unified_dim}, experts: {moe_config.get('num_experts', 4)})")
+        # print(f"✅ Block {i} added MoE component (unified_dim: {unified_dim}, experts: {moe_config.get('num_experts', 4)})")
 
 
 def generate_sekai_camera_embeddings_sliding(
@@ -297,7 +299,7 @@ def generate_sekai_camera_embeddings_sliding(
     new_frames, 
     total_generated, 
     use_real_poses=True,
-    direction="left"):
+    cam_type=1):
     """
     Generate camera embeddings for Sekai dataset - sliding window version
     
@@ -308,7 +310,7 @@ def generate_sekai_camera_embeddings_sliding(
         new_frames: Number of new frames to generate this time
         total_generated: Total frames already generated
         use_real_poses: Whether to use real Sekai camera poses
-        direction: Camera movement direction, default "left"
+        cam_type: Camera type for synthetic trajectory generation, default 1
         
     Returns:
         camera_embedding: Torch tensor of shape (M, 3*4 + 1), where M is the total number of generated frames
@@ -377,7 +379,7 @@ def generate_sekai_camera_embeddings_sliding(
         STAGE_1 = new_frames//2
         STAGE_2 = new_frames - STAGE_1
         
-        if direction=="forward":
+        if cam_type==1:
             print("--------------- FORWARD MODE ---------------")
             relative_poses = []
             for i in range(max_needed_frames):
@@ -397,7 +399,7 @@ def generate_sekai_camera_embeddings_sliding(
                 relative_pose = pose[:3, :]
                 relative_poses.append(torch.as_tensor(relative_pose))
         
-        elif direction=="left":
+        elif cam_type==2:
             print("--------------- LEFT TURNING MODE ---------------")
             relative_poses = []
             for i in range(max_needed_frames):
@@ -429,7 +431,7 @@ def generate_sekai_camera_embeddings_sliding(
                 relative_pose = pose[:3, :]
                 relative_poses.append(torch.as_tensor(relative_pose))
         
-        elif direction=="right":
+        elif cam_type==3:
             print("--------------- RIGHT TURNING MODE ---------------")
             relative_poses = []
             for i in range(max_needed_frames):
@@ -461,7 +463,7 @@ def generate_sekai_camera_embeddings_sliding(
                 relative_pose = pose[:3, :]
                 relative_poses.append(torch.as_tensor(relative_pose))
         
-        elif direction=="forward_left":
+        elif cam_type==4:
             print("--------------- FORWARD LEFT MODE ---------------")
             relative_poses = []
             for i in range(max_needed_frames):
@@ -494,7 +496,7 @@ def generate_sekai_camera_embeddings_sliding(
                 relative_pose = pose[:3, :]
                 relative_poses.append(torch.as_tensor(relative_pose))
         
-        elif direction=="forward_right":
+        elif cam_type==5:
             print("--------------- FORWARD RIGHT MODE ---------------")
             relative_poses = []
             for i in range(max_needed_frames):
@@ -527,7 +529,7 @@ def generate_sekai_camera_embeddings_sliding(
                 relative_pose = pose[:3, :]
                 relative_poses.append(torch.as_tensor(relative_pose))
         
-        elif direction=="s_curve":
+        elif cam_type==6:
             print("--------------- S CURVE MODE ---------------")
             relative_poses = []
             for i in range(max_needed_frames):
@@ -585,7 +587,7 @@ def generate_sekai_camera_embeddings_sliding(
                 relative_pose = pose[:3, :]
                 relative_poses.append(torch.as_tensor(relative_pose))
                     
-        elif direction=="left_right":
+        elif cam_type==7:
             print("--------------- LEFT RIGHT MODE ---------------")
             relative_poses = []
             for i in range(max_needed_frames):
@@ -638,7 +640,7 @@ def generate_sekai_camera_embeddings_sliding(
                 relative_poses.append(torch.as_tensor(relative_pose))
                 
             else:
-                raise ValueError(f"Not Defined Direction: {direction}")
+                raise ValueError(f"Not Defined Camera Type: {cam_type}")
             
         pose_embedding = torch.stack(relative_poses, dim=0)
         pose_embedding = rearrange(pose_embedding, 'b c d -> b (c d)')
@@ -904,7 +906,10 @@ def prepare_framepack_sliding_window_with_camera_moe(
     
     # Check if camera length is sufficient
     if camera_embedding_full.shape[0] < total_indices_length:
-        print(f"⚠️ camera_embedding length insufficient, performing zero padding: current length {camera_embedding_full.shape[0]}, required length {total_indices_length}")
+        print(f"⚠️ camera_embedding length insufficient, performing zero padding...")
+        print(f"- Current length {camera_embedding_full.shape[0]}")
+        print(f"- Required length {total_indices_length}")
+        
         shortage = total_indices_length - camera_embedding_full.shape[0]
         padding = torch.zeros(shortage, camera_embedding_full.shape[1], 
                             dtype=camera_embedding_full.dtype, device=camera_embedding_full.device)
@@ -1069,7 +1074,7 @@ def inference_moe_framepack_sliding_window(
     total_frames_to_generate=32,
     max_history_frames=49,
     device="cuda",
-    prompt="A video of a scene shot using a pedestrian's front camera while walking",
+    prompt="",
     modality_type="sekai",  # "sekai" or "nuscenes"
     use_real_poses=True,
     scene_info_path=None,  # For NuScenes dataset
@@ -1081,7 +1086,7 @@ def inference_moe_framepack_sliding_window(
     moe_num_experts=4,
     moe_top_k=2,
     moe_hidden_dim=None,
-    direction="left",
+    cam_type=1,
     use_gt_prompt=True,
     add_icons=False
 ):
@@ -1093,10 +1098,10 @@ def inference_moe_framepack_sliding_window(
     os.makedirs(dir_path, exist_ok=True)
     
     print(f"🔧  Starting MoE FramePack sliding window generation...")
-    print(f"  Modality type: {modality_type}")
-    print(f"  Camera CFG: {use_camera_cfg}, Camera guidance scale: {camera_guidance_scale}")
-    print(f"  Text guidance scale: {text_guidance_scale}")
-    print(f"  MoE config: experts={moe_num_experts}, top_k={moe_top_k}")
+    print(f"-  Modality type: {modality_type}")
+    print(f"-  Camera CFG: {use_camera_cfg}, Camera guidance scale: {camera_guidance_scale}")
+    print(f"-  Text guidance scale: {text_guidance_scale}")
+    print(f"-  MoE config: experts={moe_num_experts}, top_k={moe_top_k}")
     
     # 1. Model initialization
     replace_dit_model_in_manager()
@@ -1146,7 +1151,7 @@ def inference_moe_framepack_sliding_window(
     pipe.scheduler.set_timesteps(50)
     
     # 6. Load initial conditions
-    print("Loading initial condition frames...")
+    print("🔄 Loading initial condition frames...")
     initial_latents, encoded_data = load_or_encode_condition(
         condition_pth_path,
         condition_video,
@@ -1169,7 +1174,7 @@ def inference_moe_framepack_sliding_window(
     
     history_latents = initial_latents.to(device, dtype=model_dtype)
 
-    print(f"Initial history_latents shape: {history_latents.shape}")
+    print(f"✅ Initial history_latents shape: {history_latents.shape}")
     
     # 7. Encode prompt - support CFG
     if use_gt_prompt and 'prompt_emb' in encoded_data:
@@ -1210,7 +1215,7 @@ def inference_moe_framepack_sliding_window(
     if modality_type == "nuscenes" and scene_info_path and os.path.exists(scene_info_path):
         with open(scene_info_path, 'r') as f:
             scene_info = json.load(f)
-        print(f"Loading NuScenes scene information: {scene_info_path}")
+        print(f"✅ Loaded NuScenes scene information: {scene_info_path}")
     
     # 9. Pre-generate complete camera embedding sequence
     if modality_type == "sekai":
@@ -1221,7 +1226,7 @@ def inference_moe_framepack_sliding_window(
             total_frames_to_generate,
             0,
             use_real_poses=use_real_poses,
-            direction=direction
+            cam_type=cam_type
         ).to(device, dtype=model_dtype)
     elif modality_type == "nuscenes":
         camera_embedding_full = generate_nuscenes_camera_embeddings_sliding(
@@ -1504,8 +1509,8 @@ def inference_moe_framepack_sliding_window(
             writer.append_data(np.array(img))
 
     print(f"✅ MoE FramePack sliding window generation completed! Saved to: {output_path}")
-    print(f"  Total generated {total_generated} frames (compressed), corresponding to original {total_generated * 4} frames")
-    print(f"  Using modality: {modality_type}")
+    print(f"-  Total generated {total_generated} frames (compressed), corresponding to original {total_generated * 4} frames")
+    print(f"-  Using modality: {modality_type}")
     
 
 def main():
@@ -1566,7 +1571,7 @@ def main():
     parser.add_argument("--moe_num_experts", type=int, default=3, help="Number of experts")
     parser.add_argument("--moe_top_k", type=int, default=1, help="Top-K experts")
     parser.add_argument("--moe_hidden_dim", type=int, default=None, help="MoE hidden dimension")
-    parser.add_argument("--direction", type=str, default="left", help="Direction of video trajectory")
+    parser.add_argument("--cam_type", type=str, default="left", help="Camera type for video trajectory")
     parser.add_argument("--use_gt_prompt", action="store_true", default=False,
                        help="Use ground truth prompt embedding from dataset")
     
@@ -1624,7 +1629,7 @@ def main():
         moe_num_experts=args.moe_num_experts,
         moe_top_k=args.moe_top_k,
         moe_hidden_dim=args.moe_hidden_dim,
-        direction=args.direction,
+        cam_type=args.cam_type,
         use_gt_prompt=args.use_gt_prompt,
         add_icons=args.add_icons
     )
