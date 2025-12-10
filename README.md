@@ -93,7 +93,7 @@
 
 ## 🔥 Updates
 - __[2025.11.17]__: Release the [project page](https://eternalevan.github.io/Astra-project/).
-- __[2025.12.09]__: Release the training and inference code, model checkpoint.
+- __[2025.12.09]__: Release the inference code, model checkpoint.
 
 ## 🎯 TODO List
 
