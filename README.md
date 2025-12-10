@@ -8,7 +8,7 @@
 
   <h3 style="margin-top: 0;">
     📄
-    [<a href="https://arxiv.org/abs/2503.11647" target="_blank">arXiv</a>]
+    [<a href="https://arxiv.org/pdf/2512.08931" target="_blank">arXiv</a>]
     &nbsp;&nbsp;
     🏠
     [<a href="https://eternalevan.github.io/Astra-project/" target="_blank">Project Page</a>]
