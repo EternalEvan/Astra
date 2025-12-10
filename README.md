@@ -1,4 +1,4 @@
-# Lyra<img src="./assets/images/logo.png" alt="logo" style="height: 1em; vertical-align: baseline; margin: 0 0.1em;">: 3D-Aware Reinforcement Fine-Tuning for Interactive World Models
+# Astra<img src="./assets/images/logo.png" alt="logo" style="height: 1em; vertical-align: baseline; margin: 0 0.1em;">: General Interactive World Model with Autoregressive Denoising
 
 <div align="center">
 
