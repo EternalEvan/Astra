@@ -34,6 +34,11 @@
 **TL;DR:** Astra is an **interactive world model** that delivers realistic long-horizon video rollouts under a wide range of scenarios and action inputs.
 
 **Astra** is an **interactive**, action-driven world model that predicts long-horizon future videos across diverse real-world scenarios. Built on an autoregressive diffusion transformer with temporal causal attention, Astra supports **streaming prediction** while preserving strong temporal coherence. Astra introduces **noise-augmented history memory** to stabilize long rollouts, an **action-aware adapter** for precise control signals, and a **mixture of action experts** to route heterogeneous action modalities. Through these key innovations, Astra delivers consistent, controllable, and high-fidelity video futures for applications such as autonomous driving, robot manipulation, and camera motion.
+
+<div align="center">
+  <img src="./assets/images/pipeline.png" alt="Astra Pipeline" width="90%">
+</div>
+
 ## Gallery
 
 ### Astra+Wan2.1
