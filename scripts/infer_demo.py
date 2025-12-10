@@ -222,7 +222,7 @@ def replace_dit_model_in_manager():
                 if name == 'wan_video_dit':
                     new_model_names.append(name)
                     new_model_classes.append(WanModelMoe)
-                    print(f"Replaced model class: {name} -> WanModelMoe")
+                    # print(f"Replaced model class: {name} -> WanModelMoe")
                 else:
                     new_model_names.append(name)
                     new_model_classes.append(cls)
@@ -1097,11 +1097,11 @@ def inference_moe_framepack_sliding_window(
     dir_path = os.path.dirname(output_path)
     os.makedirs(dir_path, exist_ok=True)
     
-    print(f"🔧  Starting MoE FramePack sliding window generation...")
-    print(f"-  Modality type: {modality_type}")
-    print(f"-  Camera CFG: {use_camera_cfg}, Camera guidance scale: {camera_guidance_scale}")
-    print(f"-  Text guidance scale: {text_guidance_scale}")
-    print(f"-  MoE config: experts={moe_num_experts}, top_k={moe_top_k}")
+    print(f"🔧 Starting MoE FramePack sliding window generation...")
+    print(f"- Modality type: {modality_type}")
+    print(f"- Camera CFG: {use_camera_cfg}, Camera guidance scale: {camera_guidance_scale}")
+    print(f"- Text guidance scale: {text_guidance_scale}")
+    print(f"- MoE config: experts={moe_num_experts}, top_k={moe_top_k}")
     
     # 1. Model initialization
     replace_dit_model_in_manager()
@@ -1151,7 +1151,7 @@ def inference_moe_framepack_sliding_window(
     pipe.scheduler.set_timesteps(50)
     
     # 6. Load initial conditions
-    print("🔄 Loading initial condition frames...")
+    print("\n🔄 Loading initial condition frames...")
     initial_latents, encoded_data = load_or_encode_condition(
         condition_pth_path,
         condition_video,
@@ -1174,7 +1174,7 @@ def inference_moe_framepack_sliding_window(
     
     history_latents = initial_latents.to(device, dtype=model_dtype)
 
-    print(f"✅ Initial history_latents shape: {history_latents.shape}")
+    print(f"✅ Initial history_latents shape: {history_latents.shape}\n")
     
     # 7. Encode prompt - support CFG
     if use_gt_prompt and 'prompt_emb' in encoded_data:
@@ -1204,11 +1204,11 @@ def inference_moe_framepack_sliding_window(
         if text_guidance_scale > 1.0:
             prompt_emb_pos = pipe.encode_prompt(prompt)
             prompt_emb_neg = pipe.encode_prompt("")
-            print(f"Using Text CFG, guidance scale: {text_guidance_scale}")
+            print(f"Using Text CFG, guidance scale: {text_guidance_scale}\n")
         else:
             prompt_emb_pos = pipe.encode_prompt(prompt)
             prompt_emb_neg = None
-            print("Not using Text CFG")
+            print("Not using Text CFG\n")
     
     # 8. Load scene information (for NuScenes)
     scene_info = None
@@ -1246,12 +1246,12 @@ def inference_moe_framepack_sliding_window(
     else:
         raise ValueError(f"Unsupported modality type: {modality_type}")
     
-    print(f"Complete camera sequence shape: {camera_embedding_full.shape}")
+    print(f"✅ Complete camera sequence shape: {camera_embedding_full.shape}")
     
     # 10. Create unconditional camera embedding for Camera CFG
     if use_camera_cfg:
         camera_embedding_uncond = torch.zeros_like(camera_embedding_full)
-        print(f"Creating unconditional camera embedding for CFG")
+        print(f"🔄 Creating unconditional camera embedding for CFG")
     
     # 11. Sliding window generation loop
     total_generated = 0
@@ -1577,15 +1577,15 @@ def main():
     
     args = parser.parse_args()
 
-    print(f"MoE FramePack CFG generation settings:")
-    print(f"Modality type: {args.modality_type}")
-    print(f"Camera CFG: {args.use_camera_cfg}")
+    print(f"🔧 MoE FramePack CFG generation settings:")
+    print(f"- Modality type: {args.modality_type}")
+    print(f"- Camera CFG: {args.use_camera_cfg}")
     if args.use_camera_cfg:
-        print(f"Camera guidance scale: {args.camera_guidance_scale}")
-    print(f"Using GT Prompt: {args.use_gt_prompt}")
-    print(f"Text guidance scale: {args.text_guidance_scale}")
-    print(f"MoE config: experts={args.moe_num_experts}, top_k={args.moe_top_k}")
-    print(f"DiT{args.dit_path}")
+        print(f"- Camera guidance scale: {args.camera_guidance_scale}")
+    print(f"- Using GT Prompt: {args.use_gt_prompt}")
+    print(f"- Text guidance scale: {args.text_guidance_scale}")
+    print(f"- MoE config: experts={args.moe_num_experts}, top_k={args.moe_top_k}")
+    print(f"- DiT: {args.dit_path}\n")
     
     # Validate NuScenes parameters
     if args.modality_type == "nuscenes" and not args.scene_info_path:
@@ -1598,11 +1598,11 @@ def main():
         raise ValueError("Need to provide condition_pth, condition_video, or condition_image as condition input")
     
     if args.condition_pth:
-        print(f"Using pre-encoded pth: {args.condition_pth}")
+        print(f"Using pre-encoded pth: {args.condition_pth}\n")
     elif args.condition_video:
-        print(f"Using condition video for online encoding: {args.condition_video}")
+        print(f"Using condition video for online encoding: {args.condition_video}\n")
     elif args.condition_image:
-        print(f"Using condition image for online encoding: {args.condition_image} (repeat 10 frames)")
+        print(f"Using condition image for online encoding: {args.condition_image}\n")
     
     inference_moe_framepack_sliding_window(
         condition_pth_path=args.condition_pth,
@@ -1629,7 +1629,7 @@ def main():
         moe_num_experts=args.moe_num_experts,
         moe_top_k=args.moe_top_k,
         moe_hidden_dim=args.moe_hidden_dim,
-        cam_type=args.cam_type,
+        cam_type=int(args.cam_type),
         use_gt_prompt=args.use_gt_prompt,
         add_icons=args.add_icons
     )
