@@ -183,15 +183,15 @@ python infer_demo.py \
 
 We provide several preset camera types, as shown in the table below. Additionally, you can generate new trajectories for testing.
 
-| direction         | Trajectory                  |
-|-------------------|-----------------------------|
-| `forward`         | Move Forward (Straight)     |
-| `left`            | Rotate Left In Place        |
-| `right`           | Rotate Right In Place       |
-| `forward_left`    | Move Forward + Rotate Left  |
-| `forward_right`   | Move Forward + Rotate Right |
-| `s_curve`         | S-shaped Trajectory         |
-| `left_right`      | Rotate Left → Rotate Right  |
+| direction   | Trajectory                  |
+|:-----------:|-----------------------------|
+| 1           | Move Forward (Straight)     |
+| 2           | Rotate Left In Place        |
+| 3           | Rotate Right In Place       |
+| 4           | Move Forward + Rotate Left  |
+| 5           | Move Forward + Rotate Right |
+| 6           | S-shaped Trajectory         |
+| 7           | Rotate Left → Rotate Right  |
 
 ## Future Work 🚀
 
