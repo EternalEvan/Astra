@@ -1,12 +1,13 @@
-CUDA_VISIBLE_DEVICES=3 python ./scripts/infer_demo.py \
-    --condition_pth ./examples/condition_pth/garden_1.pth \
+CUDA_VISIBLE_DEVICES=0 python ./scripts/infer_demo.py \
+    --condition_image ./examples/condition_images/garden_1.png \
     --start_frame 0 \
     --initial_condition_frames 1 \
     --frames_per_generation 8 \
     --total_frames_to_generate 24 \
-    --dit_path /path/to/your/model.pth \
+    --dit_path ./models/Astra/checkpoints/Astra.pth \
+    --wan_model_path ./models/Wan-AI/Wan2.1-T2V-1.3B \
     --prompt "A sunlit European street lined with historic buildings and vibrant greenery creates a warm, charming, and inviting atmosphere. The scene shows a picturesque open square paved with red bricks, surrounded by classic narrow townhouses featuring tall windows, gabled roofs, and dark-painted facades. On the right side, a lush arrangement of potted plants and blooming flowers adds rich color and texture to the foreground. A vintage-style streetlamp stands prominently near the center-right, contributing to the timeless character of the street. Mature trees frame the background, their leaves glowing in the warm afternoon sunlight. Bicycles are visible along the edges of the buildings, reinforcing the urban yet leisurely feel. The sky is bright blue with scattered clouds, and soft sun flares enter the frame from the left, enhancing the scene’s inviting, peaceful mood." \
     --add_icons \
     --modality_type sekai \
-    --direction forward_left \
-    --output_path /mnt/data/louis_crq/astra2/astra_test/Astra/examples/output_videos/output_moe_framepack_sliding.mp4
+    --cam_type 4 \
+    --output_path ./examples/output_videos/output_moe_framepack_sliding.mp4

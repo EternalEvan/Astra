@@ -162,10 +162,9 @@ python infer_demo.py \
   --dit_path ../models/Astra/checkpoints/diffusion_pytorch_model.ckpt \
   --wan_model_path ../models/Wan-AI/Wan2.1-T2V-1.3B \
   --condition_image ../examples/condition_images/garden_1.png \
-  --direction forward_left \
+  --cam_type 4 \
   --prompt "A sunlit European street lined with historic buildings and vibrant greenery creates a warm, charming, and inviting atmosphere. The scene shows a picturesque open square paved with red bricks, surrounded by classic narrow townhouses featuring tall windows, gabled roofs, and dark-painted facades. On the right side, a lush arrangement of potted plants and blooming flowers adds rich color and texture to the foreground. A vintage-style streetlamp stands prominently near the center-right, contributing to the timeless character of the street. Mature trees frame the background, their leaves glowing in the warm afternoon sunlight. Bicycles are visible along the edges of the buildings, reinforcing the urban yet leisurely feel. The sky is bright blue with scattered clouds, and soft sun flares enter the frame from the left, enhancing the scene’s inviting, peaceful mood."  \
   --output_path ../examples/output_videos/output_moe_framepack_sliding.mp4 \
-
 ```
 
 Step 4: Test your own images
@@ -177,22 +176,22 @@ python infer_demo.py \
   --dit_path path/to/your/dit_ckpt \
   --wan_model_path path/to/your/Wan2.1-T2V-1.3B \
   --condition_image path/to/your/image \
-  --direction your_direction \
+  --cam_type your_cam_type \
   --prompt your_prompt \
   --output_path path/to/your/output_video
 ```
 
 We provide several preset camera types, as shown in the table below. Additionally, you can generate new trajectories for testing.
 
-| direction         | Trajectory                  |
-|-------------------|-----------------------------|
-| `forward`         | Move Forward (Straight)     |
-| `left`            | Rotate Left In Place        |
-| `right`           | Rotate Right In Place       |
-| `forward_left`    | Move Forward + Rotate Left  |
-| `forward_right`   | Move Forward + Rotate Right |
-| `s_curve`         | S-shaped Trajectory         |
-| `left_right`      | Rotate Left → Rotate Right  |
+| cam_type    | Trajectory                  |
+|:-----------:|-----------------------------|
+| 1           | Move Forward (Straight)     |
+| 2           | Rotate Left In Place        |
+| 3           | Rotate Right In Place       |
+| 4           | Move Forward + Rotate Left  |
+| 5           | Move Forward + Rotate Right |
+| 6           | S-shaped Trajectory         |
+| 7           | Rotate Left → Rotate Right  |
 
 ## Future Work 🚀
 
