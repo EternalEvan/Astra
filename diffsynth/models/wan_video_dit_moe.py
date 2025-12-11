@@ -676,7 +676,7 @@ class WanModelMoe(torch.nn.Module):
                                 clean_latents_4x=None, clean_latent_4x_indices=None,
                                 cam_emb=None,
                                 modality_inputs: Optional[dict] = None):  # 🔧 新增modality_inputs参数
-        """🔧 处理FramePack风格的多尺度输入 + MoE模态输入处理 - 完全照抄wan_video_dit_recam_future实现"""
+        """🔧 处理FramePack风格的多尺度输入 + MoE模态输入处理 - 完全照wan_video_dit_recam_future实现"""
         
         # 主要latents处理
         hidden_states, grid_size = self.patchify(latents)

@@ -1,0 +1,1 @@
+Download our model from: https://huggingface.co/EvanEternal/Astra/blob/main/models/Astra/checkpoints/diffusion_pytorch_model
