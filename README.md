@@ -399,13 +399,10 @@ Feel free to explore these outstanding related works, including but not limited 
 
 Please leave us a star 🌟 and cite our paper if you find our work helpful.
 ```
-@misc{zhu2025astrageneralinteractiveworld,
-      title={Astra: General Interactive World Model with Autoregressive Denoising}, 
-      author={Yixuan Zhu and Jiaqi Feng and Wenzhao Zheng and Yuan Gao and Xin Tao and Pengfei Wan and Jie Zhou and Jiwen Lu},
-      year={2025},
-      eprint={2512.08931},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2512.08931}, 
+@article{zhu2025astra,
+  title={Astra: General Interactive World Model with Autoregressive Denoising},
+  author={Zhu, Yixuan and Feng, Jiaqi and Zheng, Wenzhao and Gao, Yuan and Tao, Xin and Wan, Pengfei and Zhou, Jie and Lu, Jiwen},
+  journal={arXiv preprint arXiv:2512.08931},
+  year={2025}
 }
 ```
