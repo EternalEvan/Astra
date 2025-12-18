@@ -96,7 +96,7 @@
 - __[2025.12.09]__: Release the inference code, model checkpoint.
 
 ## 🎯 TODO List
-
+- [x] **Release dataset preprocessing tools**
 - [ ] **Release full inference pipelines** for additional scenarios:
   - [ ] 🚗 Autonomous driving
   - [ ] 🤖 Robotic manipulation
@@ -106,8 +106,6 @@
 - [ ] **Open-source training scripts**:
   - [ ] ⬆️ Action-conditioned autoregressive denoising training
   - [ ] 🔄 Multi-scenario joint training pipeline
-
-- [ ] **Release dataset preprocessing tools**
 
 - [ ] **Provide unified evaluation toolkit**
 <!-- ## 🚀 Trail: Try ReCamMaster with Your Own Videos
