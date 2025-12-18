@@ -221,7 +221,7 @@ python train_single.py
 ```
 The training requires about 60G GPU memory.
 
-##### Hardware Requirements
+#### Hardware Requirements
 
 - **GPU Memory**: The training process requires approximately **60 GB of VRAM**.
 - **Recommended Hardware**: We recommend using high-end GPUs such as the **NVIDIA A100 (80GB)** or **H100** to ensure stable performance and accommodate memory overhead.
