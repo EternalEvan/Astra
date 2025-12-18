@@ -10,3 +10,5 @@ google-cloud-sdk/
 *.gz
 =*
 *.pickle
+.DS_Store
+**/.DS_Store
