@@ -133,7 +133,7 @@ If you would like to use ReCamMaster as a baseline and need qualitative or quant
 Astra is built upon [Wan2.1-1.3B](https://github.com/Wan-Video/Wan2.1), a diffusion-based video generation model. We provide inference scripts to help you quickly generate videos from images and action inputs. Follow the steps below:
 
 ### Inference
-Step 1: Set up the environment
+#### Step 1: Set up the environment
 
 [DiffSynth-Studio](https://github.com/modelscope/DiffSynth-Studio) requires Rust and Cargo to compile extensions. You can install them using the following command:
 ```shell
@@ -148,7 +148,7 @@ cd Astra
 pip install -e .
 ```
 
-Step 2: Download the pretrained checkpoints
+#### Step 2: Download the pretrained checkpoints
 1. Download the pre-trained Wan2.1 models
 
 ```shell
@@ -159,7 +159,7 @@ python download_wan2.1.py
 
 Please download from [huggingface](https://huggingface.co/EvanEternal/Astra/blob/main/models/Astra/checkpoints/diffusion_pytorch_model.ckpt) and place it in ```models/Astra/checkpoints```.
 
-Step 3: Test the example image
+#### Step 3: Test the example image
 ```shell
 python infer_demo.py \
   --dit_path ../models/Astra/checkpoints/diffusion_pytorch_model.ckpt \
@@ -171,7 +171,7 @@ python infer_demo.py \
 ```
 This inference can be conducted on a single 24GB GPU, such as the NVIDIA 3090.
 
-Step 4: Test your own images
+#### Step 4: Test your own images
 
 To test with your own custom images, you need to prepare the target images and their corresponding text prompts. **We recommend that the size of the input images is close to 832×480 (width × height, 16:9)**, which is consistent with the resolution of the generated video and can help achieve better video generation effects. For prompts generation, you can refer to the [Prompt Extension section](https://github.com/Wan-Video/Wan2.1?tab=readme-ov-file#2-using-prompt-extension) in Wan2.1 for guidance on crafting the captions.
 
@@ -196,6 +196,36 @@ We provide several preset camera types, as shown in the table below. Additionall
 | 5           | Move Forward + Rotate Right |
 | 6           | S-shaped Trajectory         |
 | 7           | Rotate Left → Rotate Right  |
+
+
+### Training
+
+#### Step 1: Data Preprocessing
+
+To facilitate joint training across large-scale open-source datasets, we implement a preprocessing pipeline designed for maximum training efficiency. This process involves three key steps:
+
+- **Video Encoding**: Compressing raw videos into latent space using a Video VAE.
+- **Prompt Encoding**: Converting textual descriptions into embeddings via a text tokenizer.
+- **Action Extraction**: Generating precise action/pose embeddings from the source data.
+
+This preprocessing stage must be completed prior to starting the training loop. You can find the implementation scripts and detailed usage instructions in the [./data](https://github.com/EternalEvan/Astra/tree/main/data) directory.
+
+#### Step 2: Training on a Single Dataset
+
+Once the data is preprocessed, you can initiate training on a specific dataset. This stage allows for initial model validation or fine-tuning on a targeted domain.
+
+Execute the training script using the following command:
+
+```bash
+python train_single.py
+```
+The training requires about 60G GPU memory.
+
+##### Hardware Requirements
+
+- **GPU Memory**: The training process requires approximately **60 GB of VRAM**.
+- **Recommended Hardware**: We recommend using high-end GPUs such as the **NVIDIA A100 (80GB)** or **H100** to ensure stable performance and accommodate memory overhead.
+- **Cost Optimization**: For environments with limited resources, the `--max_condition_frames` can be shortened to reduce VRAM consumption and computational costs.
 
 ## Future Work 🚀
 
