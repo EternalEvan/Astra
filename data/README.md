@@ -60,7 +60,7 @@ Outputs in `--output_dir`:
 ---
 
 ## 4) If interrupted: merge rank jsonl into one manifest
-Script: `mergejson.py`
+Script: `merge_json.py`
 
 ### Edit output_dir inside mergejson.py
 Set:
@@ -68,7 +68,7 @@ Set:
 
 ### Run
 ```bash
-python mergejson.py
+python merge_json.py
 ```
 
 Result:
