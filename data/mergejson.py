@@ -61,5 +61,5 @@ def merge_all_jsonl_to_manifest(output_dir: str):
         
 
 if __name__ == "__main__":
-    output_dir = "/mnt/data/louis_crq/preprocessed_data/SpatialVID_Wan22"  # Change this to your output directory
+    output_dir = "/mnt/data/preprocessed_data/SpatialVID_Wan21"  # Change this to your output directory
     merge_all_jsonl_to_manifest(output_dir)

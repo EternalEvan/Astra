@@ -73,5 +73,5 @@ python mergejson.py
 
 Result:
 - `output_dir/manifest.json` merged from `manifest_rank*.jsonl` (deduplicated).
-"""
+
 
