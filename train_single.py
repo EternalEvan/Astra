@@ -13,7 +13,7 @@ from diffsynth import WanVideoAstraPipeline, ModelManager
 
 from torchvision.transforms import v2
 from einops import rearrange
-from pose_classifier import PoseClassifier
+
 import argparse
 from scipy.spatial.transform import Rotation as R
 
@@ -100,7 +100,6 @@ class MultiDatasetDynamicDataset(torch.utils.data.Dataset):
         self.height = height
         self.width = width
         self.steps_per_epoch = steps_per_epoch
-        self.pose_classifier = PoseClassifier()
         
         # VAE temporal compression ratio
         self.time_compression_ratio = 4
