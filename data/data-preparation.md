@@ -1,4 +1,4 @@
-This README explains how to **filter SpatialVID samples** and run **multi-GPU pretokenization**, then **merge manifests** if the pretokenization is interrupted.
+This README explains how to **filter SpatialVID samples** and run **multi-GPU pretokenization**, then **merge manifests** if the pretokenization is interrupted or finished.
 
 ---
 
@@ -34,7 +34,7 @@ Output: a filtered JSON list (e.g., `manifest25.json`).
 Script: `pretokenize.py` (torchrun distributed)
 
 ### IMPORTANT: update hard-coded paths
-`pretokenize.py` contains machine-specific paths (e.g., VideoX-Fun config / pretrained / dataset root prefix).  
+`pretokenize.py` contains machine-specific paths (e.g.,  pretrained / dataset / output paths).  
 Make sure they match your environment.
 
 ### Run (recommended via script)
