@@ -104,7 +104,7 @@
 
 
 - [ ] **Open-source training scripts**:
-  - [ ] ⬆️ Action-conditioned autoregressive denoising training
+  - [x] ⬆️ Action-conditioned autoregressive denoising training
   - [ ] 🔄 Multi-scenario joint training pipeline
 
 - [ ] **Provide unified evaluation toolkit**
