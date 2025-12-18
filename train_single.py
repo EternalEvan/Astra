@@ -684,7 +684,7 @@ class MultiDatasetDynamicDataset(torch.utils.data.Dataset):
                 if segment_info.get('use_first_latent', False):
                     first_latent_data = encoded_data["latents_first"]
                     full_latents[:, :, 0:1, :, :] = first_latent_data
-                    print(f"✅ SpatialVid: Using first_latent.pth as condition (80% probability)")
+                    print(f"✅ SpatialVid: Using first_latent.pth as condition")
 
                 all_camera_embeddings = self.create_pose_embeddings(cam_data, segment_info, dataset_type, scene_info)
                 if all_camera_embeddings is None:
@@ -982,13 +982,13 @@ class MultiDatasetLightningModelForTrain(pl.LightningModule):
         reconstruction_loss = torch.nn.functional.mse_loss(noise_pred.float(), training_target.float())
         reconstruction_loss = reconstruction_loss * self.pipe.scheduler.training_weight(timestep)
         
-        specialization_loss_weight = self.moe_config.get("moe_loss_weight", 0.1)
-        total_loss = reconstruction_loss + specialization_loss_weight * specialization_loss
+        # specialization_loss_weight = self.moe_config.get("moe_loss_weight", 0.1)
+        total_loss = reconstruction_loss #+ specialization_loss_weight * specialization_loss
         
         print(f'\nLoss info (Step {self.global_step}):')
         print(f'  - Diff loss: {reconstruction_loss.item():.6f}')
-        print(f'  - MoE specification loss: {specialization_loss.item():.6f}')
-        print(f'  - Expert loss weight: {specialization_loss_weight}')
+        # print(f'  - MoE specification loss: {specialization_loss.item():.6f}')
+        # print(f'  - Expert loss weight: {specialization_loss_weight}')
         print(f'  - Total Loss: {total_loss.item():.6f}')
         
         modality_to_expert = {"sekai": 0, "nuscenes": 1, "openx": 2}
