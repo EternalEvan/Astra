@@ -560,7 +560,7 @@ class MultiDatasetDynamicDataset(torch.utils.data.Dataset):
         if dataset_type == 'nuscenes' and scene_info is not None:
             return self.select_dynamic_segment_nuscenes(scene_info)
         else:
-            total_lens = full_latents.shape[1]
+            total_lens = full_latents.shape[2]
             
             min_condition_compressed = self.min_condition_frames // self.time_compression_ratio
             max_condition_compressed = self.max_condition_frames // self.time_compression_ratio
