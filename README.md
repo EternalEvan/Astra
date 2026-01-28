@@ -91,7 +91,8 @@
   </tr>
 </table>
 
-## 🔥 Updates
+## 🔥 News
+- __[2026.1.26]__: Our paper has been accepted to **ICLR 2026**! 🎉
 - __[2025.11.17]__: Release the [project page](https://eternalevan.github.io/Astra-project/).
 - __[2025.12.09]__: Release the inference code, model checkpoint.
 
