@@ -1,4 +1,4 @@
-# Astra<img src="./assets/images/logo.png" alt="logo" style="height: 1em; vertical-align: baseline; margin: 0 0.1em;">: General Interactive World Model with Autoregressive Denoising
+# Astra<img src="./assets/images/logo.png" alt="logo" style="height: 1em; vertical-align: baseline; margin: 0 0.1em;">: General Interactive World Model with Autoregressive Denoising (ICLR 2026)
 
 <div align="center">
 
