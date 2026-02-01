@@ -887,10 +887,9 @@ def generate_nuscenes_camera_embeddings_sliding(
 def prepare_framepack_sliding_window_with_camera_moe(
     history_latents, 
     target_frames_to_generate, 
-    camera_embedding_full, 
-    start_frame, 
-    modality_type, 
-    max_history_frames=49):
+    camera_embedding_full,
+    modality_type
+):
     """FramePack sliding window mechanism - MoE version"""
     # history_latents: [C, T, H, W] current history latents
     C, T, H, W = history_latents.shape
@@ -898,70 +897,60 @@ def prepare_framepack_sliding_window_with_camera_moe(
     # Fixed index structure (this determines the number of camera frames needed)
     # 1 start frame + 16 frames 4x + 2 frames 2x + 1 frame 1x + target_frames_to_generate
     total_indices_length = 1 + 16 + 2 + 1 + target_frames_to_generate
-    indices = torch.arange(0, total_indices_length)
+    
+    start_frame = max(T - 20, 0)
+    indices = torch.arange(start_frame, start_frame + total_indices_length)
+    available_frames = min(T, 20)
+    start_pos = 20 - available_frames # populate the nearest positions to target frames first
+    indices[0] = indices[start_pos] # NOTE: always start from the first valid latent
+    if start_pos > 1:
+        indices[1:start_pos] = -1 # mark invalid latents (zero-latent)
+    
     split_sizes = [1, 16, 2, 1, target_frames_to_generate]
     clean_latent_indices_start, clean_latent_4x_indices, clean_latent_2x_indices, clean_latent_1x_indices, latent_indices = \
         indices.split(split_sizes, dim=0)
     clean_latent_indices = torch.cat([clean_latent_indices_start, clean_latent_1x_indices], dim=0)
     
-    # Check if camera length is sufficient
-    if camera_embedding_full.shape[0] < total_indices_length:
+    # Process latents
+    clean_latents_combined = torch.zeros(C, 20, H, W, dtype=history_latents.dtype, device=history_latents.device)
+    clean_latents_combined[:, start_pos:, :, :] = history_latents[:, -available_frames:, :, :]
+    start_latent     = clean_latents_combined[:, start_pos:start_pos+1, :, :]
+    clean_latents_4x = clean_latents_combined[:, 1:17, :, :]
+    clean_latents_2x = clean_latents_combined[:, 17:19, :, :]
+    clean_latents_1x = clean_latents_combined[:, 19:20, :, :]
+    
+    clean_latents = torch.cat([start_latent, clean_latents_1x], dim=1)
+    
+    # Process cam_emb
+    actual_needed_frames = T + target_frames_to_generate
+    if camera_embedding_full.shape[0] < actual_needed_frames:
         print(f"⚠️ camera_embedding length insufficient, performing zero padding...")
         print(f"- Current length {camera_embedding_full.shape[0]}")
-        print(f"- Required length {total_indices_length}")
+        print(f"- Required length {actual_needed_frames}")
         
-        shortage = total_indices_length - camera_embedding_full.shape[0]
-        padding = torch.zeros(shortage, camera_embedding_full.shape[1], 
-                            dtype=camera_embedding_full.dtype, device=camera_embedding_full.device)
+        shortage = actual_needed_frames - camera_embedding_full.shape[0]
+        zero_motions = torch.eye(3, 4).unsqueeze(0).repeat(shortage, 1, 1) # use identity rather than zero poses
+        padding = rearrange(zero_motions, 'b c d -> b (c d)')
         camera_embedding_full = torch.cat([camera_embedding_full, padding], dim=0)
     
     # Select corresponding part from complete camera sequence
     combined_camera = torch.zeros(
-        total_indices_length, 
+        actual_needed_frames,
         camera_embedding_full.shape[1],
         dtype=camera_embedding_full.dtype,
-        device=camera_embedding_full.device)
-    
-    # Camera poses for historical condition frames
-    history_slice = camera_embedding_full[max(T - 19, 0):T, :].clone()
-    combined_camera[19 - history_slice.shape[0]:19, :] = history_slice
-    
-    # Camera poses for target frames
-    target_slice = camera_embedding_full[T:T + target_frames_to_generate, :].clone()
-    combined_camera[19:19 + target_slice.shape[0], :] = target_slice
+        device=camera_embedding_full.device
+    )
+    combined_camera = camera_embedding_full[0:actual_needed_frames, :].clone()
     
     # Reset mask according to current history length
     combined_camera[:, -1] = 0.0  # First set all to target (0)
-    
-    # Set condition mask: first 19 frames determined by actual history length
-    if T > 0:
-        available_frames = min(T, 19)
-        start_pos = 19 - available_frames
-        combined_camera[start_pos:19, -1] = 1.0  # Mark cameras corresponding to valid clean latents as condition
+    combined_camera[0:T, -1] = 1.0  # Mark valid clean latents as condition
+
     
     print(f"🔧 MoE Camera mask update:")
     print(f"  - History frames: {T}")
     print(f"  - Valid condition frames: {available_frames if T > 0 else 0}")
     print(f"  - Modality type: {modality_type}")
-    
-    # Process latents
-    clean_latents_combined = torch.zeros(C, 19, H, W, dtype=history_latents.dtype, device=history_latents.device)
-    
-    if T > 0:
-        available_frames = min(T, 19)
-        start_pos = 19 - available_frames
-        clean_latents_combined[:, start_pos:, :, :] = history_latents[:, -available_frames:, :, :]
-    
-    clean_latents_4x = clean_latents_combined[:, 0:16, :, :]
-    clean_latents_2x = clean_latents_combined[:, 16:18, :, :]
-    clean_latents_1x = clean_latents_combined[:, 18:19, :, :]
-    
-    if T > 0:
-        start_latent = history_latents[:, 0:1, :, :]
-    else:
-        start_latent = torch.zeros(C, 1, H, W, dtype=history_latents.dtype, device=history_latents.device)
-    
-    clean_latents = torch.cat([start_latent, clean_latents_1x], dim=1)
     
     return {
         'latent_indices': latent_indices,
