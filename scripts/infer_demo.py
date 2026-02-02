@@ -639,8 +639,8 @@ def generate_sekai_camera_embeddings_sliding(
                 relative_pose = pose[:3, :]
                 relative_poses.append(torch.as_tensor(relative_pose))
                 
-            else:
-                raise ValueError(f"Not Defined Camera Type: {cam_type}")
+        else:
+            raise ValueError(f"Not Defined Camera Type: {cam_type}")
             
         pose_embedding = torch.stack(relative_poses, dim=0)
         pose_embedding = rearrange(pose_embedding, 'b c d -> b (c d)')
@@ -1256,9 +1256,7 @@ def inference_moe_framepack_sliding_window(
             history_latents,
             current_generation,
             camera_embedding_full,
-            start_frame,
-            modality_type,
-            max_history_frames
+            modality_type
         )
         
         # Prepare input
