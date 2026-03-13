@@ -198,6 +198,78 @@ We provide several preset camera types, as shown in the table below. Additionall
 | 6           | S-shaped Trajectory         |
 | 7           | Rotate Left → Rotate Right  |
 
+### Input Data Modalities
+
+Astra accepts three types of inputs, which together fully specify an inference request:
+
+#### 1. Visual Condition Input (choose one)
+
+The model requires an initial visual context from which it predicts future video frames. You may supply this in one of three ways:
+
+| Flag | Format | Description |
+|------|--------|-------------|
+| `--condition_image` | PNG / JPG (recommended 832×480, 16:9) | A single RGB image used as the starting frame. It is automatically resized to 832×480 before VAE encoding. |
+| `--condition_video` | MP4 / any format readable by imageio | A short video clip. All frames are extracted, resized, and encoded on-the-fly. |
+| `--condition_pth` | `.pth` file containing pre-encoded latents | Pre-computed VAE latents. Use this to skip re-encoding the same video for repeated experiments. |
+
+#### 2. Text Prompt
+
+`--prompt` accepts a free-form natural-language description of the scene content (e.g. environment appearance, weather, style). It is encoded by a T5-based text encoder and conditions the diffusion process. Leaving it blank (`""`) is valid but degrades quality; for best results follow the [Wan2.1 prompt guidelines](https://github.com/Wan-Video/Wan2.1?tab=readme-ov-file#2-using-prompt-extension).
+
+#### 3. Action / Camera Embedding (`--modality_type`)
+
+Astra uses a **Mixture of Action Experts** design, routing each inference through a domain-specific expert selected by `--modality_type`. Each modality encodes spatial motion as a compact vector appended with a binary conditioning mask.
+
+| `--modality_type` | Domain | Action vector format | Dims |
+|:-----------------:|--------|----------------------|:----:|
+| `sekai` *(default)* | Free-camera / game / synthetic scenes | Relative 3×4 camera pose matrix (flattened to 12 values) + 1-bit conditioning mask | **13** |
+| `nuscenes` | Autonomous driving (NuScenes dataset) | Relative vehicle pose: 3-D translation + 4-D quaternion rotation + 1-bit conditioning mask | **8** |
+| `openx` | Robot manipulation (Open X-Embodiment) | Relative 3×4 end-effector pose matrix (flattened to 12 values) + 1-bit conditioning mask | **13** |
+
+**Sekai / free-camera mode** (`--modality_type sekai`, default):  
+Camera trajectories are generated synthetically from the `--cam_type` parameter. Use this mode for game footage, drone footage, or any scene where camera motion rather than vehicle/robot motion is the control signal.
+
+**NuScenes / driving mode** (`--modality_type nuscenes`):  
+Vehicle poses are represented as absolute 3-D translations plus quaternion rotations and loaded from a scene-info JSON file produced during dataset preprocessing. Without a real pose file the script falls back to a synthetic left-turn trajectory.
+
+```shell
+python infer_demo.py \
+  --modality_type nuscenes \
+  --scene_info_path path/to/nuscenes_scene_info.json \
+  --condition_image path/to/driving_frame.png \
+  --prompt "A city street in rainy weather." \
+  --output_path output_driving.mp4 \
+  --dit_path path/to/dit_ckpt \
+  --wan_model_path path/to/Wan2.1-T2V-1.3B
+```
+
+**OpenX / robot manipulation mode** (`--modality_type openx`):  
+End-effector motion is encoded in the same 12-D relative-pose format as `sekai`. Without real robot trajectories the script uses a synthetic fine-manipulation motion pattern (slow compound rotation + minor translation).
+
+```shell
+python infer_demo.py \
+  --modality_type openx \
+  --condition_image path/to/robot_workspace.png \
+  --prompt "A robot arm picks up a small red block from the table." \
+  --output_path output_robot.mp4 \
+  --dit_path path/to/dit_ckpt \
+  --wan_model_path path/to/Wan2.1-T2V-1.3B
+```
+
+#### Summary
+
+When you run inference, the three input streams are:
+
+```
+Visual input  ──►  VAE encoder  ──►  latent condition frames
+Text prompt   ──►  T5 encoder   ──►  text embeddings           } ──► Diffusion Transformer (Astra)
+Action type   ──►  Modality     ──►  action embeddings (8–13D)
+              expert selected
+              by --modality_type
+```
+
+All visual inputs are normalised to **832×480** (width × height) before encoding. The temporal compression ratio of the VAE is **4×**, so every 4 source video frames correspond to 1 latent frame.
+
 
 ### Training
 
