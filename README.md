@@ -161,14 +161,17 @@ python download_wan2.1.py
 Please download from [huggingface](https://huggingface.co/EvanEternal/Astra/blob/main/models/Astra/checkpoints/diffusion_pytorch_model.ckpt) and place it in ```models/Astra/checkpoints```.
 
 #### Step 3: Test the example image
+
+> **Run all commands from the project root** (`Astra/`). The script can also be run from inside `scripts/` using `../` relative paths, but project-root execution is recommended for consistency with the defaults shown below.
+
 ```shell
-python infer_demo.py \
-  --dit_path ../models/Astra/checkpoints/diffusion_pytorch_model.ckpt \
-  --wan_model_path ../models/Wan-AI/Wan2.1-T2V-1.3B \
-  --condition_image ../examples/condition_images/garden_1.png \
+CUDA_VISIBLE_DEVICES=0 python scripts/infer_demo.py \
+  --dit_path ./models/Astra/checkpoints/diffusion_pytorch_model.ckpt \
+  --wan_model_path ./models/Wan-AI/Wan2.1-T2V-1.3B \
+  --condition_image ./examples/condition_images/garden_1.png \
   --cam_type 4 \
-  --prompt "A sunlit European street lined with historic buildings and vibrant greenery creates a warm, charming, and inviting atmosphere. The scene shows a picturesque open square paved with red bricks, surrounded by classic narrow townhouses featuring tall windows, gabled roofs, and dark-painted facades. On the right side, a lush arrangement of potted plants and blooming flowers adds rich color and texture to the foreground. A vintage-style streetlamp stands prominently near the center-right, contributing to the timeless character of the street. Mature trees frame the background, their leaves glowing in the warm afternoon sunlight. Bicycles are visible along the edges of the buildings, reinforcing the urban yet leisurely feel. The sky is bright blue with scattered clouds, and soft sun flares enter the frame from the left, enhancing the scene’s inviting, peaceful mood."  \
-  --output_path ../examples/output_videos/output_moe_framepack_sliding.mp4 \
+  --prompt "A sunlit European street lined with historic buildings and vibrant greenery creates a warm, charming, and inviting atmosphere. The scene shows a picturesque open square paved with red bricks, surrounded by classic narrow townhouses featuring tall windows, gabled roofs, and dark-painted facades. On the right side, a lush arrangement of potted plants and blooming flowers adds rich color and texture to the foreground. A vintage-style streetlamp stands prominently near the center-right, contributing to the timeless character of the street. Mature trees frame the background, their leaves glowing in the warm afternoon sunlight. Bicycles are visible along the edges of the buildings, reinforcing the urban yet leisurely feel. The sky is bright blue with scattered clouds, and soft sun flares enter the frame from the left, enhancing the scene's inviting, peaceful mood." \
+  --output_path ./examples/output_videos/output_moe_framepack_sliding.mp4
 ```
 This inference can be conducted on a single 24GB GPU, such as the NVIDIA 3090.
 
@@ -177,13 +180,13 @@ This inference can be conducted on a single 24GB GPU, such as the NVIDIA 3090.
 To test with your own custom images, you need to prepare the target images and their corresponding text prompts. **We recommend that the size of the input images is close to 832×480 (width × height, 16:9)**, which is consistent with the resolution of the generated video and can help achieve better video generation effects. For prompts generation, you can refer to the [Prompt Extension section](https://github.com/Wan-Video/Wan2.1?tab=readme-ov-file#2-using-prompt-extension) in Wan2.1 for guidance on crafting the captions.
 
 ```shell
-python infer_demo.py \
-  --dit_path path/to/your/dit_ckpt \
-  --wan_model_path path/to/your/Wan2.1-T2V-1.3B \
+CUDA_VISIBLE_DEVICES=0 python scripts/infer_demo.py \
+  --dit_path ./models/Astra/checkpoints/diffusion_pytorch_model.ckpt \
+  --wan_model_path ./models/Wan-AI/Wan2.1-T2V-1.3B \
   --condition_image path/to/your/image \
   --cam_type your_cam_type \
-  --prompt your_prompt \
-  --output_path path/to/your/output_video
+  --prompt "your scene description" \
+  --output_path path/to/your/output_video.mp4
 ```
 
 We provide several preset camera types, as shown in the table below. Additionally, you can generate new trajectories for testing.
@@ -197,6 +200,54 @@ We provide several preset camera types, as shown in the table below. Additionall
 | 5           | Move Forward + Rotate Right |
 | 6           | S-shaped Trajectory         |
 | 7           | Rotate Left → Rotate Right  |
+
+#### Key CLI Arguments Reference (`scripts/infer_demo.py`)
+
+The table below lists all key arguments, their default values, and descriptions. All path defaults are relative to the **project root** (`Astra/`).
+
+> **Note:** The script is designed to be run from the project root. When launched as
+> `python scripts/infer_demo.py ...`, relative-path defaults resolve against the project root.
+
+**Input sources** — provide exactly one of the three condition inputs:
+
+| Argument | Default | Description |
+|---|---|---|
+| `--condition_image` | *(required if no other condition)* | Path to a single condition image (PNG/JPG). Recommended resolution: 832×480. |
+| `--condition_video` | `None` | Path to a condition video file; each frame is encoded on-the-fly. |
+| `--condition_pth` | `None` | Path to a pre-encoded `.pth` latent file (fastest option; skips VAE encoding). |
+
+**Model weights** — these paths can always be overridden on the command line:
+
+| Argument | Default | Description |
+|---|---|---|
+| `--dit_path` | `./models/Astra/checkpoints/diffusion_pytorch_model.ckpt` | Path to the Astra DiT checkpoint. Override this if you saved the checkpoint elsewhere, e.g. `--dit_path /path/to/your/Astra.ckpt`. |
+| `--wan_model_path` | `./models/Wan-AI/Wan2.1-T2V-1.3B` | Directory of the base Wan2.1-1.3B model. Override with `--wan_model_path /path/to/Wan2.1-T2V-1.3B`. |
+
+**Generation controls:**
+
+| Argument | Default | Description |
+|---|---|---|
+| `--prompt` | `""` | Text description of the scene. |
+| `--cam_type` | `"left"` | Preset camera trajectory (see table above; use an integer 1–7 or a custom string). |
+| `--output_path` | `./examples/output_videos/output_moe_framepack_sliding.mp4` | Path for the generated output video. |
+| `--total_frames_to_generate` | `24` | Total number of frames to generate. |
+| `--frames_per_generation` | `8` | Frames produced per sliding-window step. |
+| `--initial_condition_frames` | `1` | Number of initial condition frames fed to the model. |
+| `--modality_type` | `sekai` | Action modality: `sekai`, `nuscenes`, or `openx`. |
+| `--add_icons` | `False` | Overlay HUD control icons on the generated video. |
+| `--device` | `cuda` | Compute device (`cuda` or `cpu`). |
+
+**Example: weights stored outside the default directory**
+
+```shell
+CUDA_VISIBLE_DEVICES=0 python scripts/infer_demo.py \
+  --dit_path /data/weights/Astra/diffusion_pytorch_model.ckpt \
+  --wan_model_path /data/weights/Wan2.1-T2V-1.3B \
+  --condition_image ./examples/condition_images/garden_1.png \
+  --cam_type 4 \
+  --prompt "Your scene description here." \
+  --output_path ./examples/output_videos/my_output.mp4
+```
 
 
 ### Training
